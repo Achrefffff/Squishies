@@ -73,28 +73,38 @@ const PILL_PALETTE = [
   {
     idle: "bg-[#DFF0FF] text-[#0E4A8A] border-[#96CCFF] hover:bg-[#CCE6FF]",
     active: "bg-[#1E88E5] text-white border-[#1565C0] shadow-sm ring-2 ring-[#1E88E5]/25",
+    halo: "border-[#1E88E5]",
+    sparkle: "#1E88E5",
   },
   {
     idle: "bg-[#E3F9D4] text-[#255910] border-[#9DE06B] hover:bg-[#D2F4BA]",
     active: "bg-[#3FA322] text-white border-[#2E7D17] shadow-sm ring-2 ring-[#3FA322]/25",
+    halo: "border-[#3FA322]",
+    sparkle: "#3FA322",
   },
   {
     idle: "bg-[#FFF0CC] text-[#7A4200] border-[#FFD066] hover:bg-[#FFE5AA]",
     active: "bg-[#E68A00] text-white border-[#B86E00] shadow-sm ring-2 ring-[#E68A00]/25",
+    halo: "border-[#E68A00]",
+    sparkle: "#E68A00",
   },
   {
     idle: "bg-[#F2E3FF] text-[#5A1E94] border-[#CEA6FF] hover:bg-[#E7D0FF]",
     active: "bg-[#8B35DB] text-white border-[#6B21A8] shadow-sm ring-2 ring-[#8B35DB]/25",
+    halo: "border-[#8B35DB]",
+    sparkle: "#8B35DB",
   },
 ] as const;
 
 function QuickCategoryPills({
   collections,
   activeHandle,
+  transitionId,
   onSelect,
 }: {
   collections: readonly HomeCollectionData[];
   activeHandle: string | null;
+  transitionId: number;
   onSelect: (handle: string | null) => void;
 }) {
   if (collections.length === 0) return null;
@@ -107,17 +117,24 @@ function QuickCategoryPills({
       aria-label="Filtrer les squishies par univers"
       className="max-w-page px-margin mx-auto w-full py-3"
     >
-      <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:px-0">
+      <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 py-1.5 scrollbar-none sm:mx-0 sm:flex-wrap sm:px-0">
         <button
           type="button"
           aria-pressed={isAllActive}
           onClick={() => onSelect(null)}
-          className={`squish-press focus-visible:outline-accent min-h-10 shrink-0 cursor-pointer snap-start rounded-full border px-4 py-2 text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm ${
+          className={`squish-press focus-visible:outline-accent relative min-h-10 shrink-0 cursor-pointer snap-start rounded-full border px-4 py-2 text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm ${
             isAllActive
-              ? "border-[#D93275] bg-[#FF4D94] text-white shadow-sm ring-2 ring-[#FF4D94]/25"
+              ? `border-[#D93275] bg-[#FF4D94] text-white shadow-sm ring-2 ring-[#FF4D94]/25 ${transitionId > 0 ? "kawaii-pill-active" : ""}`
               : "border-[#FF9BC4] bg-[#FFE4EF] text-[#A81652] hover:bg-[#FFD4E6]"
           }`}
         >
+          {isAllActive && transitionId > 0 ? (
+            <span
+              key={`halo-all-${transitionId}`}
+              aria-hidden="true"
+              className="kawaii-pill-halo pointer-events-none absolute inset-0 rounded-full border-2 border-[#FF4D94]"
+            />
+          ) : null}
           Tout voir
         </button>
         {collections.map((collection, index) => {
@@ -130,8 +147,15 @@ function QuickCategoryPills({
               type="button"
               aria-pressed={isActive}
               onClick={() => onSelect(collection.handle)}
-              className={`${isActive ? palette.active : palette.idle} squish-press focus-visible:outline-accent min-h-10 shrink-0 cursor-pointer snap-start rounded-full border px-4 py-2 text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm`}
+              className={`${isActive ? `${palette.active} ${transitionId > 0 ? "kawaii-pill-active" : ""}` : palette.idle} squish-press focus-visible:outline-accent relative min-h-10 shrink-0 cursor-pointer snap-start rounded-full border px-4 py-2 text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm`}
             >
+              {isActive && transitionId > 0 ? (
+                <span
+                  key={`halo-${collection.handle}-${transitionId}`}
+                  aria-hidden="true"
+                  className={`kawaii-pill-halo pointer-events-none absolute inset-0 rounded-full border-2 ${palette.halo}`}
+                />
+              ) : null}
               {collection.title}
             </button>
           );
@@ -141,28 +165,21 @@ function QuickCategoryPills({
   );
 }
 
-type SlideDirection = "left" | "right";
-
 function CatalogSection({
   products,
   activeCollection,
+  accentColor,
   transitionId,
-  slideDirection,
   onReset,
 }: {
   products: readonly ProductCardData[];
   activeCollection: HomeCollectionData | null;
+  accentColor: string;
   transitionId: number;
-  slideDirection: SlideDirection;
   onReset: () => void;
 }) {
   const countLabel = `${products.length} ${products.length > 1 ? "produits" : "produit"}`;
-  const slideClass =
-    transitionId > 0
-      ? slideDirection === "right"
-        ? "catalog-slide-from-right"
-        : "catalog-slide-from-left"
-      : undefined;
+  const shouldAnimate = transitionId > 0;
 
   return (
     <section
@@ -171,14 +188,27 @@ function CatalogSection({
       aria-labelledby="catalogue-heading"
     >
       <div className="max-w-page px-margin mx-auto mb-5 flex items-end justify-between gap-4 sm:mb-7">
-        <div key={`heading-${transitionId}`} className={slideClass}>
+        <div className="relative">
           <p className="type-overline text-primary mb-1">
             {activeCollection ? "Univers sélectionné" : "La collection"} ·{" "}
             <span className="tabular-nums">{countLabel}</span>
           </p>
-          <h2 id="catalogue-heading" className="type-heading-xl text-on-surface">
-            {activeCollection ? activeCollection.title : "Tous nos Squishies"}
-          </h2>
+          <div className="inline-flex items-center gap-2">
+            <h2 id="catalogue-heading" className="type-heading-xl text-on-surface">
+              {activeCollection ? activeCollection.title : "Tous nos Squishies"}
+            </h2>
+            {shouldAnimate ? (
+              <svg
+                key={`sparkle-${transitionId}`}
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                className="kawaii-sparkle size-5 shrink-0"
+                fill={accentColor}
+              >
+                <path d="M12 2L14.2 8.8L21 11L14.2 13.2L12 20L9.8 13.2L3 11L9.8 8.8L12 2Z" />
+              </svg>
+            ) : null}
+          </div>
         </div>
         {activeCollection ? (
           <button
@@ -200,14 +230,23 @@ function CatalogSection({
       </div>
 
       {products.length > 0 ? (
-        <div className="max-w-page px-margin mx-auto contain-paint">
+        <div className="max-w-page px-margin mx-auto">
           <ul
             key={`grid-${transitionId}`}
             role="list"
-            className={`grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 lg:gap-6 ${slideClass ?? ""}`}
+            className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 lg:gap-6"
           >
-            {products.map((product) => (
-              <li key={product.handle}>
+            {products.map((product, index) => (
+              <li
+                key={product.handle}
+                className={
+                  shouldAnimate
+                    ? index % 2 === 0
+                      ? "kawaii-card-left"
+                      : "kawaii-card-right"
+                    : undefined
+                }
+              >
                 <ProductCard product={product} />
               </li>
             ))}
@@ -364,27 +403,25 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const { featuredProducts, featuredCollections } = loaderData;
   const [activeCollectionHandle, setActiveCollectionHandle] = useState<string | null>(null);
   const [transitionId, setTransitionId] = useState(0);
-  const [slideDirection, setSlideDirection] = useState<SlideDirection>("right");
-
-  const getPillIndex = (handle: string | null) => {
-    if (handle === null) return 0;
-    const foundIndex = featuredCollections.findIndex((c) => c.handle === handle);
-    return foundIndex === -1 ? 0 : foundIndex + 1;
-  };
 
   const handleSelectCollection = (handle: string | null) => {
     if (handle === activeCollectionHandle) return;
-    const prevIndex = getPillIndex(activeCollectionHandle);
-    const nextIndex = getPillIndex(handle);
-    setSlideDirection(nextIndex >= prevIndex ? "right" : "left");
     setActiveCollectionHandle(handle);
     setTransitionId((count) => count + 1);
   };
 
-  const activeCollection = useMemo(
-    () => featuredCollections.find((c) => c.handle === activeCollectionHandle) ?? null,
+  const activeCollectionIndex = useMemo(
+    () => featuredCollections.findIndex((c) => c.handle === activeCollectionHandle),
     [featuredCollections, activeCollectionHandle],
   );
+
+  const activeCollection =
+    activeCollectionIndex >= 0 ? featuredCollections[activeCollectionIndex] : null;
+
+  const accentColor =
+    activeCollectionIndex >= 0
+      ? PILL_PALETTE[activeCollectionIndex % PILL_PALETTE.length].sparkle
+      : "#FF4D94";
 
   const visibleProducts = useMemo(() => {
     if (!activeCollection) return featuredProducts;
@@ -409,13 +446,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <QuickCategoryPills
         collections={featuredCollections}
         activeHandle={activeCollectionHandle}
+        transitionId={transitionId}
         onSelect={handleSelectCollection}
       />
       <CatalogSection
         products={visibleProducts}
         activeCollection={activeCollection}
+        accentColor={accentColor}
         transitionId={transitionId}
-        slideDirection={slideDirection}
         onReset={() => handleSelectCollection(null)}
       />
       <ShopByCategory collections={featuredCollections} />

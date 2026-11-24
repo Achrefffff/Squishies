@@ -203,35 +203,93 @@ body {
   }
 }
 
-/* Option 2: Directional horizontal slide for inline category filter transitions */
-@keyframes catalog-slide-in-right {
+/* Option 3: Kawaii tilt pop + pastel pill sparkle ring for inline category filter transitions */
+@keyframes kawaii-card-tilt-left {
   0% {
     opacity: 0;
-    transform: translateX(28px);
+    transform: translateY(10px) scale(0.95) rotate(-1.8deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.015) rotate(0.5deg);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1) rotate(0deg);
   }
 }
 
-@keyframes catalog-slide-in-left {
+@keyframes kawaii-card-tilt-right {
   0% {
     opacity: 0;
-    transform: translateX(-28px);
+    transform: translateY(10px) scale(0.95) rotate(1.8deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.015) rotate(-0.5deg);
   }
   100% {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0) scale(1) rotate(0deg);
   }
 }
 
-.catalog-slide-from-right {
-  animation: catalog-slide-in-right 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+@keyframes kawaii-pill-pop {
+  0% {
+    transform: scale(0.93);
+  }
+  55% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-.catalog-slide-from-left {
-  animation: catalog-slide-in-left 280ms cubic-bezier(0.22, 1, 0.36, 1) both;
+@keyframes kawaii-pill-ripple {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.22, 1.45);
+  }
+}
+
+@keyframes kawaii-sparkle-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-25deg);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.15) rotate(10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.6) rotate(35deg);
+  }
+}
+
+.kawaii-card-left {
+  animation: kawaii-card-tilt-left 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kawaii-card-right {
+  animation: kawaii-card-tilt-right 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kawaii-pill-active {
+  animation: kawaii-pill-pop 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kawaii-pill-halo {
+  animation: kawaii-pill-ripple 480ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.kawaii-sparkle {
+  animation: kawaii-sparkle-burst 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -247,8 +305,11 @@ body {
   .advent-xmas-btn::before,
   .xmas-flake,
   .xmas-star,
-  .catalog-slide-from-right,
-  .catalog-slide-from-left {
+  .kawaii-card-left,
+  .kawaii-card-right,
+  .kawaii-pill-active,
+  .kawaii-pill-halo,
+  .kawaii-sparkle {
     animation: none;
   }
 }
