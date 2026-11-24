@@ -1,5 +1,5 @@
 import { gql } from "@shopify/hydrogen";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties } from "react";
 import { Link } from "react-router";
 
 import {
@@ -144,13 +144,16 @@ function QuickCategoryPills({
 function CatalogSection({
   products,
   activeCollection,
+  transitionId,
   onReset,
 }: {
   products: readonly ProductCardData[];
   activeCollection: HomeCollectionData | null;
+  transitionId: number;
   onReset: () => void;
 }) {
   const countLabel = `${products.length} ${products.length > 1 ? "produits" : "produit"}`;
+  const shouldAnimate = transitionId > 0;
 
   return (
     <section
@@ -159,7 +162,10 @@ function CatalogSection({
       aria-labelledby="catalogue-heading"
     >
       <div className="max-w-page px-margin mx-auto mb-5 flex items-end justify-between gap-4 sm:mb-7">
-        <div>
+        <div
+          key={`heading-${transitionId}`}
+          className={shouldAnimate ? "squishy-heading-enter" : undefined}
+        >
           <p className="type-overline text-primary mb-1">
             {activeCollection ? "Univers sélectionné" : "La collection"} ·{" "}
             <span className="tabular-nums">{countLabel}</span>
@@ -188,13 +194,22 @@ function CatalogSection({
       </div>
 
       {products.length > 0 ? (
-        <div className="max-w-page px-margin mx-auto contain-paint">
+        <div className="max-w-page px-margin mx-auto">
           <ul
+            key={`grid-${transitionId}`}
             role="list"
             className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 lg:gap-6"
           >
-            {products.map((product) => (
-              <li key={product.handle}>
+            {products.map((product, index) => (
+              <li
+                key={product.handle}
+                className={shouldAnimate ? "squishy-card-enter" : undefined}
+                style={
+                  shouldAnimate
+                    ? ({ "--stagger-delay": `${Math.min(index * 45, 360)}ms` } as CSSProperties)
+                    : undefined
+                }
+              >
                 <ProductCard product={product} />
               </li>
             ))}
@@ -350,6 +365,13 @@ function PromisesStrip() {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { featuredProducts, featuredCollections } = loaderData;
   const [activeCollectionHandle, setActiveCollectionHandle] = useState<string | null>(null);
+  const [transitionId, setTransitionId] = useState(0);
+
+  const handleSelectCollection = (handle: string | null) => {
+    if (handle === activeCollectionHandle) return;
+    setActiveCollectionHandle(handle);
+    setTransitionId((count) => count + 1);
+  };
 
   const activeCollection = useMemo(
     () => featuredCollections.find((c) => c.handle === activeCollectionHandle) ?? null,
@@ -379,12 +401,13 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <QuickCategoryPills
         collections={featuredCollections}
         activeHandle={activeCollectionHandle}
-        onSelect={setActiveCollectionHandle}
+        onSelect={handleSelectCollection}
       />
       <CatalogSection
         products={visibleProducts}
         activeCollection={activeCollection}
-        onReset={() => setActiveCollectionHandle(null)}
+        transitionId={transitionId}
+        onReset={() => handleSelectCollection(null)}
       />
       <ShopByCategory collections={featuredCollections} />
       <FestiveSpotlight product={adventProduct} />

@@ -203,6 +203,45 @@ body {
   }
 }
 
+/* Option 1: Squishy Pop & Bounce cascade for inline category filter transitions */
+@keyframes squishy-pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.91);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-3px) scale(1.03);
+  }
+  84% {
+    transform: translateY(1px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes squishy-heading-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.squishy-card-enter {
+  animation: squishy-pop-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+.squishy-heading-enter {
+  animation: squishy-heading-in 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drawer-right,
   .drawer-left,
@@ -215,7 +254,9 @@ body {
 
   .advent-xmas-btn::before,
   .xmas-flake,
-  .xmas-star {
+  .xmas-star,
+  .squishy-card-enter,
+  .squishy-heading-enter {
     animation: none;
   }
 }
