@@ -350,56 +350,6 @@ function FestiveSpotlight({ product }: { product: ProductCardData | undefined })
 
 type PromiseIconId = "sensory" | "gift" | "payment" | "safety";
 
-const MARQUEE_ITEMS = [
-  { label: "Textures moelleuses & crispy", starColor: "#FF4D94" },
-  { label: "Coffrets prêts à offrir", starColor: "#1D8F5A" },
-  { label: "Paiement 100 % sécurisé", starColor: "#1D72D6" },
-  { label: "Jouets non comestibles (3+ / 6+)", starColor: "#7E3AF2" },
-  { label: "Édition Noël · 24 surprises", starColor: "#E68A00" },
-] as const;
-
-const PROMISES: ReadonlyArray<{
-  id: PromiseIconId;
-  title: string;
-  desc: string;
-  badgeBg: string;
-  iconColor: string;
-  iconSoftFill: string;
-}> = [
-  {
-    id: "sensory",
-    title: "Textures sensorielles",
-    desc: "Moelleux, pailletés ou crispy",
-    badgeBg: "bg-[#FFE6F0] ring-[#FFC2DB]",
-    iconColor: "#E84A7F",
-    iconSoftFill: "#FFD1E4",
-  },
-  {
-    id: "gift",
-    title: "Coffrets soignés",
-    desc: "Boîtes illustrées & étuis rigides",
-    badgeBg: "bg-[#E0F9EA] ring-[#AAE8C2]",
-    iconColor: "#1D8F5A",
-    iconSoftFill: "#C7F4D9",
-  },
-  {
-    id: "payment",
-    title: "Paiement sécurisé",
-    desc: "Checkout Shopify & Shop Pay",
-    badgeBg: "bg-[#E1F0FF] ring-[#B3D9FF]",
-    iconColor: "#1D72D6",
-    iconSoftFill: "#CCE4FF",
-  },
-  {
-    id: "safety",
-    title: "Sécurité jouets",
-    desc: "Non comestibles · Âge 3+ ou 6+",
-    badgeBg: "bg-[#EFE3FF] ring-[#D5B8FF]",
-    iconColor: "#7E3AF2",
-    iconSoftFill: "#E4D4FF",
-  },
-];
-
 function PromiseIcon({
   id,
   color,
@@ -411,7 +361,7 @@ function PromiseIcon({
 }) {
   if (id === "sensory") {
     return (
-      <svg viewBox="0 0 28 28" fill="none" className="size-5 sm:size-6" aria-hidden="true">
+      <svg viewBox="0 0 28 28" fill="none" className="size-6" aria-hidden="true">
         <path
           d="M12.5 4.5L14.3 9.7L19.5 11.5L14.3 13.3L12.5 18.5L10.7 13.3L5.5 11.5L10.7 9.7L12.5 4.5Z"
           fill={softFill}
@@ -430,7 +380,7 @@ function PromiseIcon({
 
   if (id === "gift") {
     return (
-      <svg viewBox="0 0 28 28" fill="none" className="size-5 sm:size-6" aria-hidden="true">
+      <svg viewBox="0 0 28 28" fill="none" className="size-6" aria-hidden="true">
         <rect
           x="5.5"
           y="12.5"
@@ -472,7 +422,7 @@ function PromiseIcon({
 
   if (id === "payment") {
     return (
-      <svg viewBox="0 0 28 28" fill="none" className="size-5 sm:size-6" aria-hidden="true">
+      <svg viewBox="0 0 28 28" fill="none" className="size-6" aria-hidden="true">
         <path
           d="M14 4.5L21.5 7.5V13.8C21.5 18.6 18.3 22.2 14 23.8C9.7 22.2 6.5 18.6 6.5 13.8V7.5L14 4.5Z"
           fill={softFill}
@@ -501,7 +451,7 @@ function PromiseIcon({
   }
 
   return (
-    <svg viewBox="0 0 28 28" fill="none" className="size-5 sm:size-6" aria-hidden="true">
+    <svg viewBox="0 0 28 28" fill="none" className="size-6" aria-hidden="true">
       <path
         d="M14 4.5L21.5 7.5V13.8C21.5 18.6 18.3 22.2 14 23.8C9.7 22.2 6.5 18.6 6.5 13.8V7.5L14 4.5Z"
         fill={softFill}
@@ -520,69 +470,144 @@ function PromiseIcon({
   );
 }
 
-function PromisesStrip() {
+function PromisesStrip({ products }: { products: readonly ProductCardData[] }) {
+  const previewProducts = products.filter((p) => p.featuredImage).slice(0, 3);
+
   return (
-    <section className="w-full pb-4" aria-label="Engagements Squishies">
-      {/* Ruban pastel défilant */}
-      <div className="kawaii-marquee-wrapper overflow-hidden border-y border-[#F6D6E4] bg-gradient-to-r from-[#FFF0F6] via-[#FFF6E0] to-[#E9FBF0] py-3">
-        <div className="kawaii-marquee-track">
-          {[0, 1].map((loopIndex) => (
-            <div
-              key={loopIndex}
-              aria-hidden={loopIndex === 1 ? "true" : undefined}
-              className="flex shrink-0 items-center gap-6 pr-6 sm:gap-8 sm:pr-8"
-            >
-              {MARQUEE_ITEMS.map((item) => (
-                <span
-                  key={`${loopIndex}-${item.label}`}
-                  className="font-heading text-on-surface inline-flex shrink-0 items-center gap-3 text-xs font-semibold tracking-tight sm:text-sm"
-                >
-                  <svg
-                    viewBox="0 0 16 16"
-                    className="size-3.5 shrink-0"
-                    fill={item.starColor}
-                    aria-hidden="true"
-                  >
-                    <path d="M8 1L9.6 6.4L15 8L9.6 9.6L8 15L6.4 9.6L1 8L6.4 6.4L8 1Z" />
-                  </svg>
-                  <span>{item.label}</span>
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
+    <section
+      className="max-w-page px-margin mx-auto w-full pb-6 sm:pb-8"
+      aria-labelledby="promises-heading"
+    >
+      <div className="mb-4 sm:mb-6">
+        <p className="type-overline text-primary mb-1">L&apos;expérience Squishies</p>
+        <h2 id="promises-heading" className="type-heading-xl text-on-surface">
+          Pourquoi on les adore
+        </h2>
       </div>
 
-      {/* Barre d'icônes compacte */}
-      <div className="max-w-page px-margin mx-auto mt-6">
-        <ul
-          role="list"
-          className="bg-surface-elevated border-border/80 squishies-card-shadow grid grid-cols-2 divide-border/60 overflow-hidden rounded-3xl border sm:grid-cols-2 lg:grid-cols-4 lg:divide-x"
-        >
-          {PROMISES.map((item, index) => (
-            <li
-              key={item.id}
-              className={`flex items-center gap-3 px-3.5 py-3.5 sm:px-5 sm:py-4 ${
-                index >= 2 ? "border-border/60 border-t lg:border-t-0" : ""
-              } ${index % 2 === 1 ? "border-border/60 border-l lg:border-l-0" : ""}`}
-            >
-              <span
-                className={`${item.badgeBg} inline-flex size-10 shrink-0 items-center justify-center rounded-2xl ring-1 sm:size-11`}
-                aria-hidden="true"
-              >
-                <PromiseIcon id={item.id} color={item.iconColor} softFill={item.iconSoftFill} />
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-12">
+        {/* Grande carte vedette Bento : Textures sensorielles + miniatures produits */}
+        <article className="squishies-card-hover relative col-span-2 flex flex-col justify-between overflow-hidden rounded-[2rem] border border-[#FFC2DB] bg-gradient-to-br from-[#FFF2F7] via-[#FFE3EF] to-[#FFE9DA] p-5 shadow-[0_14px_30px_-20px_rgba(232,74,127,0.55),inset_0_2px_0_rgba(255,255,255,0.9)] sm:p-6 lg:col-span-6 lg:row-span-2">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-10 -right-10 size-36 rounded-full bg-[#FF9EC6]/30 blur-xl"
+          />
+
+          <div className="relative flex items-start justify-between gap-3">
+            <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/95 shadow-sm ring-1 ring-white">
+              <PromiseIcon id="sensory" color="#E84A7F" softFill="#FFD1E4" />
+            </span>
+            <span className="inline-flex rounded-full border border-[#FFB3D2] bg-white/85 px-3 py-1 text-[11px] font-bold text-[#B81D58] tabular-nums">
+              {products.length} modèles à collectionner
+            </span>
+          </div>
+
+          <div className="relative mt-4">
+            <h3 className="font-heading text-on-surface text-lg leading-snug font-bold sm:text-xl">
+              Textures sensorielles uniques
+            </h3>
+            <p className="text-on-surface/80 mt-1.5 max-w-md text-xs leading-relaxed sm:text-sm">
+              Moelleux, pailletés ou craquants crispy : chaque squishy offre une vraie sensation
+              anti-stress dès la première pression.
+            </p>
+          </div>
+
+          <div className="relative mt-5 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-wrap gap-1.5">
+              <span className="rounded-full bg-white/85 px-3 py-1 text-[11px] font-bold text-[#B81D58] shadow-2xs">
+                Moelleux
               </span>
-              <div className="min-w-0">
-                <h3 className="font-heading text-on-surface truncate text-xs font-bold sm:text-sm">
-                  {item.title}
-                </h3>
-                <p className="text-on-surface-secondary mt-0.5 line-clamp-2 text-[11px] leading-snug sm:text-xs">
-                  {item.desc}
-                </p>
+              <span className="rounded-full bg-white/85 px-3 py-1 text-[11px] font-bold text-[#6B21A8] shadow-2xs">
+                Pailleté
+              </span>
+              <span className="rounded-full bg-white/85 px-3 py-1 text-[11px] font-bold text-[#156B43] shadow-2xs">
+                Crispy
+              </span>
+            </div>
+
+            {previewProducts.length > 0 ? (
+              <div className="flex items-center -space-x-3" aria-hidden="true">
+                {previewProducts.map((product, index) => (
+                  <img
+                    key={product.handle}
+                    src={shopifyImageUrl(product.featuredImage!.url, { width: 160 })}
+                    alt=""
+                    width={52}
+                    height={52}
+                    loading="lazy"
+                    decoding="async"
+                    className={`size-12 rounded-2xl border-2 border-white bg-white object-cover shadow-sm sm:size-14 ${
+                      index === 0 ? "-rotate-6" : index === 1 ? "z-10 rotate-2" : "rotate-6"
+                    }`}
+                  />
+                ))}
               </div>
-            </li>
-          ))}
-        </ul>
+            ) : null}
+          </div>
+        </article>
+
+        {/* Carte bandeau horizontal : Coffrets soignés */}
+        <article className="squishies-card-hover relative col-span-2 flex items-center gap-4 overflow-hidden rounded-[1.75rem] border border-[#AAE8C2] bg-gradient-to-br from-[#F1FDF5] via-[#DFF9E9] to-[#CEF4DC] p-4 shadow-[0_12px_26px_-18px_rgba(30,142,90,0.45),inset_0_2px_0_rgba(255,255,255,0.85)] sm:p-5 lg:col-span-6">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-8 -right-8 size-28 rounded-full bg-[#7CE0A6]/30 blur-lg"
+          />
+          <span className="relative inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/95 shadow-sm ring-1 ring-white">
+            <PromiseIcon id="gift" color="#1D8F5A" softFill="#C7F4D9" />
+          </span>
+          <div className="relative min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-heading text-on-surface text-sm font-bold sm:text-base">
+                Coffrets soignés
+              </h3>
+              <span className="inline-flex rounded-full border border-[#96E0B4] bg-white/85 px-2.5 py-0.5 text-[10px] font-bold text-[#156B43]">
+                Prêt à offrir
+              </span>
+            </div>
+            <p className="text-on-surface/75 mt-1 text-xs leading-relaxed sm:text-sm">
+              Livrés dans leurs boîtes illustrées, étuis rigides ou paniers vapeur.
+            </p>
+          </div>
+        </article>
+
+        {/* Tuile compacte 1 : Paiement sécurisé */}
+        <article className="squishies-card-hover relative col-span-1 overflow-hidden rounded-[1.75rem] border border-[#B3D9FF] bg-gradient-to-br from-[#F2F8FF] via-[#E1F0FF] to-[#D1E8FF] p-4 shadow-[0_12px_26px_-18px_rgba(29,114,214,0.45),inset_0_2px_0_rgba(255,255,255,0.85)] sm:p-5 lg:col-span-3">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-7 -right-7 size-20 rounded-full bg-[#8BC4FF]/30 blur-md"
+          />
+          <span className="relative inline-flex size-11 items-center justify-center rounded-2xl bg-white/95 shadow-sm ring-1 ring-white">
+            <PromiseIcon id="payment" color="#1D72D6" softFill="#CCE4FF" />
+          </span>
+          <h3 className="font-heading text-on-surface relative mt-3 text-sm font-bold sm:text-base">
+            Paiement sécurisé
+          </h3>
+          <p className="text-on-surface/75 relative mt-1 text-xs leading-relaxed">
+            Checkout officiel Shopify &amp; Shop Pay chiffré.
+          </p>
+        </article>
+
+        {/* Tuile compacte 2 : Sécurité jouets */}
+        <article className="squishies-card-hover relative col-span-1 overflow-hidden rounded-[1.75rem] border border-[#D5B8FF] bg-gradient-to-br from-[#F8F3FF] via-[#EFE3FF] to-[#E5D2FF] p-4 shadow-[0_12px_26px_-18px_rgba(126,58,242,0.45),inset_0_2px_0_rgba(255,255,255,0.85)] sm:p-5 lg:col-span-3">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-7 -right-7 size-20 rounded-full bg-[#C29BFF]/30 blur-md"
+          />
+          <div className="relative flex items-start justify-between gap-1.5">
+            <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/95 shadow-sm ring-1 ring-white">
+              <PromiseIcon id="safety" color="#7E3AF2" softFill="#E4D4FF" />
+            </span>
+            <span className="inline-flex rounded-full border border-[#C8A3FF] bg-white/85 px-2 py-0.5 text-[10px] font-bold text-[#5B21B6]">
+              3+ / 6+
+            </span>
+          </div>
+          <h3 className="font-heading text-on-surface relative mt-3 text-sm font-bold sm:text-base">
+            Sécurité jouets
+          </h3>
+          <p className="text-on-surface/75 relative mt-1 text-xs leading-relaxed">
+            Jouets non comestibles (ne pas ingérer).
+          </p>
+        </article>
       </div>
     </section>
   );
@@ -647,7 +672,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       />
       <ShopByCategory collections={featuredCollections} />
       <FestiveSpotlight product={adventProduct} />
-      <PromisesStrip />
+      <PromisesStrip products={featuredProducts} />
     </main>
   );
 }
