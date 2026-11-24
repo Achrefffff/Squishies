@@ -292,6 +292,28 @@ body {
   animation: kawaii-sparkle-burst 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+/* Option 3: Seamless pastel marquee strip */
+@keyframes kawaii-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.kawaii-marquee-track {
+  display: flex;
+  width: max-content;
+  animation: kawaii-marquee 26s linear infinite;
+}
+
+@media (hover: hover) {
+  .kawaii-marquee-wrapper:hover .kawaii-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .drawer-right,
   .drawer-left,
@@ -309,7 +331,8 @@ body {
   .kawaii-card-right,
   .kawaii-pill-active,
   .kawaii-pill-halo,
-  .kawaii-sparkle {
+  .kawaii-sparkle,
+  .kawaii-marquee-track {
     animation: none;
   }
 }
