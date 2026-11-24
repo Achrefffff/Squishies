@@ -70,9 +70,17 @@ export type ProductCardData = StorefrontApi.ResultOf<
   typeof PRODUCT_CARD_SHAPE_QUERY
 >["products"]["nodes"][number];
 
+type CardVariant = NonNullable<ProductCardData["selectedOrFirstAvailableVariant"]>;
+
 type CardProductInput = ProductCardData & {
-  options: [];
-  adjacentVariants: [];
+  options: Array<{
+    name: string;
+    optionValues: Array<{
+      name: string;
+      firstSelectableVariant: CardVariant | null;
+    }>;
+  }>;
+  adjacentVariants: CardVariant[];
 };
 
 const { ProductProvider: CardProductProvider, useProductForm: useCardProductForm } =
@@ -133,6 +141,23 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     : onSale
       ? { label: "Promo", className: "badge-sale" }
       : sensoryBadge;
+
+  const cardProduct: CardProductInput = {
+    ...product,
+    options:
+      variant && variant.selectedOptions.length > 0
+        ? variant.selectedOptions.map((option) => ({
+            name: option.name,
+            optionValues: [
+              {
+                name: option.value,
+                firstSelectableVariant: variant,
+              },
+            ],
+          }))
+        : [],
+    adjacentVariants: variant ? [variant] : [],
+  };
 
   return (
     <article
@@ -218,7 +243,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </div>
         </div>
 
-        <CardProductProvider product={{ ...product, options: [], adjacentVariants: [] }}>
+        <CardProductProvider product={cardProduct}>
           <CardAddToCartButton available={canQuickAdd} />
         </CardProductProvider>
       </div>

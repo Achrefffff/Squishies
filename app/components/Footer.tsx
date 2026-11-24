@@ -100,9 +100,8 @@ export function Footer({ shopInfo }: { shopInfo: StorefrontShop }) {
           </div>
         </div>
 
-        <div className="border-border text-on-surface-secondary mt-10 flex flex-col gap-2 border-t pt-6 text-xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-border text-on-surface-secondary mt-10 border-t pt-6 text-xs">
           <p>© {new Date().getFullYear()} {shopInfo.name}. Tous droits réservés.</p>
-          <p>Propulsé par Shopify Hydrogen &amp; Oxygen</p>
         </div>
       </div>
     </footer>
