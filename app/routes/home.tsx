@@ -1,4 +1,5 @@
 import { gql } from "@shopify/hydrogen";
+import { useMemo, useState } from "react";
 import { Link } from "react-router";
 
 import {
@@ -26,6 +27,11 @@ const HOME_QUERY = gql(
       collections(first: 4) {
         nodes {
           ...CollectionCard
+          catalogProducts: products(first: 12) {
+            nodes {
+              id
+            }
+          }
         }
       }
     }
@@ -49,7 +55,7 @@ export async function loader({ context }: Route.LoaderArgs) {
   const { data } = await storefrontClient.graphql(HOME_QUERY);
 
   const featuredProducts: ProductCardData[] = data?.products.nodes ?? [];
-  const featuredCollections: CollectionCardData[] = data?.collections.nodes ?? [];
+  const featuredCollections = data?.collections.nodes ?? [];
 
   return {
     featuredProducts,
@@ -57,63 +63,128 @@ export async function loader({ context }: Route.LoaderArgs) {
   };
 }
 
+type HomeCollectionData = CollectionCardData & {
+  catalogProducts: {
+    nodes: readonly { id: string }[];
+  };
+};
+
 const PILL_PALETTE = [
-  "bg-[#DFF0FF] text-[#0E4A8A] border-[#96CCFF] hover:bg-[#CCE6FF]", // Bleu ciel (u du logo)
-  "bg-[#E3F9D4] text-[#255910] border-[#9DE06B] hover:bg-[#D2F4BA]", // Vert pomme (s du logo)
-  "bg-[#FFF0CC] text-[#7A4200] border-[#FFD066] hover:bg-[#FFE5AA]", // Jaune-orange (q/h du logo)
-  "bg-[#F2E3FF] text-[#5A1E94] border-[#CEA6FF] hover:bg-[#E7D0FF]", // Violet kawaii (i du logo)
+  {
+    idle: "bg-[#DFF0FF] text-[#0E4A8A] border-[#96CCFF] hover:bg-[#CCE6FF]",
+    active: "bg-[#1E88E5] text-white border-[#1565C0] shadow-sm ring-2 ring-[#1E88E5]/25",
+  },
+  {
+    idle: "bg-[#E3F9D4] text-[#255910] border-[#9DE06B] hover:bg-[#D2F4BA]",
+    active: "bg-[#3FA322] text-white border-[#2E7D17] shadow-sm ring-2 ring-[#3FA322]/25",
+  },
+  {
+    idle: "bg-[#FFF0CC] text-[#7A4200] border-[#FFD066] hover:bg-[#FFE5AA]",
+    active: "bg-[#E68A00] text-white border-[#B86E00] shadow-sm ring-2 ring-[#E68A00]/25",
+  },
+  {
+    idle: "bg-[#F2E3FF] text-[#5A1E94] border-[#CEA6FF] hover:bg-[#E7D0FF]",
+    active: "bg-[#8B35DB] text-white border-[#6B21A8] shadow-sm ring-2 ring-[#8B35DB]/25",
+  },
 ] as const;
 
-function QuickCategoryPills({ collections }: { collections: readonly CollectionCardData[] }) {
+function QuickCategoryPills({
+  collections,
+  activeHandle,
+  onSelect,
+}: {
+  collections: readonly HomeCollectionData[];
+  activeHandle: string | null;
+  onSelect: (handle: string | null) => void;
+}) {
   if (collections.length === 0) return null;
 
+  const isAllActive = activeHandle === null;
+
   return (
-    <nav
-      aria-label="Accès rapide aux univers"
+    <div
+      role="region"
+      aria-label="Filtrer les squishies par univers"
       className="max-w-page px-margin mx-auto w-full py-3"
     >
       <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 scrollbar-none sm:mx-0 sm:flex-wrap sm:px-0">
-        <a
-          href="#catalogue"
-          className="squish-press shrink-0 snap-start rounded-full border border-[#D93275] bg-[#FF4D94] px-4 py-2 text-xs font-bold text-white no-underline shadow-sm hover:bg-[#EC3A82] sm:text-sm"
+        <button
+          type="button"
+          aria-pressed={isAllActive}
+          onClick={() => onSelect(null)}
+          className={`squish-press focus-visible:outline-accent min-h-10 shrink-0 cursor-pointer snap-start rounded-full border px-4 py-2 text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm ${
+            isAllActive
+              ? "border-[#D93275] bg-[#FF4D94] text-white shadow-sm ring-2 ring-[#FF4D94]/25"
+              : "border-[#FF9BC4] bg-[#FFE4EF] text-[#A81652] hover:bg-[#FFD4E6]"
+          }`}
         >
           Tout voir
-        </a>
-        {collections.map((collection, index) => (
-          <Link
-            key={collection.handle}
-            to={`/collections/${collection.handle}`}
-            className={`${PILL_PALETTE[index % PILL_PALETTE.length]} squish-press shrink-0 snap-start rounded-full border px-4 py-2 text-xs font-bold no-underline shadow-xs sm:text-sm`}
-          >
-            {collection.title}
-          </Link>
-        ))}
+        </button>
+        {collections.map((collection, index) => {
+          const palette = PILL_PALETTE[index % PILL_PALETTE.length];
+          const isActive = activeHandle === collection.handle;
+
+          return (
+            <button
+              key={collection.handle}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => onSelect(collection.handle)}
+              className={`${isActive ? palette.active : palette.idle} squish-press focus-visible:outline-accent min-h-10 shrink-0 cursor-pointer snap-start rounded-full border px-4 py-2 text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:text-sm`}
+            >
+              {collection.title}
+            </button>
+          );
+        })}
       </div>
-    </nav>
+    </div>
   );
 }
 
-function CatalogSection({ products }: { products: readonly ProductCardData[] }) {
+function CatalogSection({
+  products,
+  activeCollection,
+  onReset,
+}: {
+  products: readonly ProductCardData[];
+  activeCollection: HomeCollectionData | null;
+  onReset: () => void;
+}) {
+  const countLabel = `${products.length} ${products.length > 1 ? "produits" : "produit"}`;
+
   return (
     <section
       id="catalogue"
-      className="w-full scroll-mt-20 pt-6 pb-10 sm:pt-10 sm:pb-14"
+      className="w-full scroll-mt-20 pt-4 pb-10 sm:pt-8 sm:pb-14"
       aria-labelledby="catalogue-heading"
     >
       <div className="max-w-page px-margin mx-auto mb-5 flex items-end justify-between gap-4 sm:mb-7">
         <div>
-          <p className="type-overline text-primary mb-1">La collection</p>
+          <p className="type-overline text-primary mb-1">
+            {activeCollection ? "Univers sélectionné" : "La collection"} ·{" "}
+            <span className="tabular-nums">{countLabel}</span>
+          </p>
           <h2 id="catalogue-heading" className="type-heading-xl text-on-surface">
-            Tous nos Squishies
+            {activeCollection ? activeCollection.title : "Tous nos Squishies"}
           </h2>
         </div>
-        <Link
-          to="/collections"
-          className="min-h-touch-target text-on-surface-secondary hover:text-primary focus-visible:outline-accent inline-flex shrink-0 items-center gap-1 rounded-full text-sm font-semibold no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors"
-        >
-          <span>Univers</span>
-          <span aria-hidden="true">→</span>
-        </Link>
+        {activeCollection ? (
+          <button
+            type="button"
+            onClick={onReset}
+            className="min-h-touch-target text-on-surface-secondary hover:text-primary focus-visible:outline-accent inline-flex shrink-0 cursor-pointer items-center gap-1 rounded-full text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors"
+          >
+            <span>Tout voir</span>
+          </button>
+        ) : (
+          <Link
+            to="/collections"
+            className="min-h-touch-target text-on-surface-secondary hover:text-primary focus-visible:outline-accent inline-flex shrink-0 items-center gap-1 rounded-full text-sm font-semibold no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors"
+          >
+            <span>Univers</span>
+            <span aria-hidden="true">→</span>
+          </Link>
+        )}
       </div>
 
       {products.length > 0 ? (
@@ -278,6 +349,19 @@ function PromisesStrip() {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { featuredProducts, featuredCollections } = loaderData;
+  const [activeCollectionHandle, setActiveCollectionHandle] = useState<string | null>(null);
+
+  const activeCollection = useMemo(
+    () => featuredCollections.find((c) => c.handle === activeCollectionHandle) ?? null,
+    [featuredCollections, activeCollectionHandle],
+  );
+
+  const visibleProducts = useMemo(() => {
+    if (!activeCollection) return featuredProducts;
+    const allowedIds = new Set(activeCollection.catalogProducts.nodes.map((product) => product.id));
+    return featuredProducts.filter((product) => allowedIds.has(product.id));
+  }, [featuredProducts, activeCollection]);
+
   const adventProduct = featuredProducts.find((p) => p.handle.includes("calendrier"));
 
   // Order hero spotlight: Advent Calendar first, then Donut & Blue Mystery Dumpling
@@ -292,8 +376,16 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         spotlightProducts={spotlightProducts}
         totalCount={featuredProducts.length}
       />
-      <QuickCategoryPills collections={featuredCollections} />
-      <CatalogSection products={featuredProducts} />
+      <QuickCategoryPills
+        collections={featuredCollections}
+        activeHandle={activeCollectionHandle}
+        onSelect={setActiveCollectionHandle}
+      />
+      <CatalogSection
+        products={visibleProducts}
+        activeCollection={activeCollection}
+        onReset={() => setActiveCollectionHandle(null)}
+      />
       <ShopByCategory collections={featuredCollections} />
       <FestiveSpotlight product={adventProduct} />
       <PromisesStrip />
