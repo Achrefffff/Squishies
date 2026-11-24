@@ -348,48 +348,228 @@ function FestiveSpotlight({ product }: { product: ProductCardData | undefined })
   );
 }
 
-const PROMISES = [
+type PromiseIconId = "sensory" | "gift" | "payment" | "safety";
+
+const PROMISES: ReadonlyArray<{
+  id: PromiseIconId;
+  title: string;
+  desc: string;
+  tag: string;
+  cardClass: string;
+  tagClass: string;
+  orbClass: string;
+  iconColor: string;
+  iconSoftFill: string;
+}> = [
   {
+    id: "sensory",
     title: "Textures sensorielles",
-    desc: "Moelleux, pailletés ou craquants crispy pour un vrai effet anti-stress.",
-    bg: "bg-pastel-rose",
+    desc: "Moelleux, pailletés ou craquants crispy pour se détendre à tout moment.",
+    tag: "Anti-stress",
+    cardClass:
+      "border-[#FFC2DB] bg-gradient-to-br from-[#FFF3F8] via-[#FFE6F0] to-[#FFD8E9] shadow-[0_12px_26px_-18px_rgba(232,74,127,0.55),inset_0_2px_0_rgba(255,255,255,0.85)]",
+    tagClass: "bg-white/80 text-[#B81D58] border-[#FFB3D2]",
+    orbClass: "bg-[#FF9DC5]/30",
+    iconColor: "#E84A7F",
+    iconSoftFill: "#FFD1E4",
   },
   {
+    id: "gift",
     title: "Coffrets soignés",
     desc: "Livrés dans leurs boîtes illustrées, étuis rigides ou paniers vapeur.",
-    bg: "bg-pastel-mint",
+    tag: "Prêt à offrir",
+    cardClass:
+      "border-[#AAE8C2] bg-gradient-to-br from-[#F1FDF5] via-[#E0F9EA] to-[#CFF4DD] shadow-[0_12px_26px_-18px_rgba(30,142,90,0.45),inset_0_2px_0_rgba(255,255,255,0.85)]",
+    tagClass: "bg-white/80 text-[#156B43] border-[#96E0B4]",
+    orbClass: "bg-[#7CE0A6]/30",
+    iconColor: "#1D8F5A",
+    iconSoftFill: "#C7F4D9",
   },
   {
+    id: "payment",
     title: "Paiement sécurisé",
     desc: "Règlement chiffré via le checkout officiel Shopify & Shop Pay.",
-    bg: "bg-pastel-sky",
+    tag: "100 % chiffré",
+    cardClass:
+      "border-[#B3D9FF] bg-gradient-to-br from-[#F2F8FF] via-[#E1F0FF] to-[#D1E8FF] shadow-[0_12px_26px_-18px_rgba(29,114,214,0.45),inset_0_2px_0_rgba(255,255,255,0.85)]",
+    tagClass: "bg-white/80 text-[#12519E] border-[#9CCBFF]",
+    orbClass: "bg-[#8BC4FF]/30",
+    iconColor: "#1D72D6",
+    iconSoftFill: "#CCE4FF",
   },
   {
+    id: "safety",
     title: "Sécurité jouets",
     desc: "Jouets non comestibles (ne pas ingérer). Âge recommandé 3+ ou 6+.",
-    bg: "bg-pastel-lilac",
+    tag: "3+ / 6+",
+    cardClass:
+      "border-[#D5B8FF] bg-gradient-to-br from-[#F8F3FF] via-[#EFE3FF] to-[#E5D2FF] shadow-[0_12px_26px_-18px_rgba(126,58,242,0.45),inset_0_2px_0_rgba(255,255,255,0.85)]",
+    tagClass: "bg-white/80 text-[#5B21B6] border-[#C8A3FF]",
+    orbClass: "bg-[#C29BFF]/30",
+    iconColor: "#7E3AF2",
+    iconSoftFill: "#E4D4FF",
   },
-] as const;
+];
+
+function PromiseIcon({
+  id,
+  color,
+  softFill,
+}: {
+  id: PromiseIconId;
+  color: string;
+  softFill: string;
+}) {
+  if (id === "sensory") {
+    return (
+      <svg viewBox="0 0 28 28" fill="none" className="size-6 sm:size-7" aria-hidden="true">
+        <path
+          d="M12.5 4.5L14.3 9.7L19.5 11.5L14.3 13.3L12.5 18.5L10.7 13.3L5.5 11.5L10.7 9.7L12.5 4.5Z"
+          fill={softFill}
+          stroke={color}
+          strokeWidth="1.9"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M21 16L21.9 18.6L24.5 19.5L21.9 20.4L21 23L20.1 20.4L17.5 19.5L20.1 18.6L21 16Z"
+          fill={color}
+        />
+        <circle cx="20.5" cy="7.5" r="1.6" fill={color} />
+      </svg>
+    );
+  }
+
+  if (id === "gift") {
+    return (
+      <svg viewBox="0 0 28 28" fill="none" className="size-6 sm:size-7" aria-hidden="true">
+        <rect
+          x="5.5"
+          y="12.5"
+          width="17"
+          height="10.5"
+          rx="2.5"
+          fill={softFill}
+          stroke={color}
+          strokeWidth="1.9"
+        />
+        <rect
+          x="4.5"
+          y="9.5"
+          width="19"
+          height="4"
+          rx="1.5"
+          fill="#FFFFFF"
+          stroke={color}
+          strokeWidth="1.9"
+        />
+        <path d="M14 9.5V23" stroke={color} strokeWidth="1.9" strokeLinecap="round" />
+        <path
+          d="M14 9.5C14 9.5 10.5 9.5 9.5 7.4C8.8 5.9 10.1 4.6 11.6 5.3C13.1 6 14 9.5 14 9.5Z"
+          fill={softFill}
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M14 9.5C14 9.5 17.5 9.5 18.5 7.4C19.2 5.9 17.9 4.6 16.4 5.3C14.9 6 14 9.5 14 9.5Z"
+          fill={softFill}
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
+
+  if (id === "payment") {
+    return (
+      <svg viewBox="0 0 28 28" fill="none" className="size-6 sm:size-7" aria-hidden="true">
+        <path
+          d="M14 4.5L21.5 7.5V13.8C21.5 18.6 18.3 22.2 14 23.8C9.7 22.2 6.5 18.6 6.5 13.8V7.5L14 4.5Z"
+          fill={softFill}
+          stroke={color}
+          strokeWidth="1.9"
+          strokeLinejoin="round"
+        />
+        <rect
+          x="10.7"
+          y="13"
+          width="6.6"
+          height="5.2"
+          rx="1.4"
+          fill="#FFFFFF"
+          stroke={color}
+          strokeWidth="1.8"
+        />
+        <path
+          d="M12.2 13V11.6C12.2 10.6 13 9.8 14 9.8C15 9.8 15.8 10.6 15.8 11.6V13"
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 28 28" fill="none" className="size-6 sm:size-7" aria-hidden="true">
+      <path
+        d="M14 4.5L21.5 7.5V13.8C21.5 18.6 18.3 22.2 14 23.8C9.7 22.2 6.5 18.6 6.5 13.8V7.5L14 4.5Z"
+        fill={softFill}
+        stroke={color}
+        strokeWidth="1.9"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M14 18.3C14 18.3 10.2 15.9 10.2 13.1C10.2 11.7 11.3 10.8 12.5 10.8C13.2 10.8 13.7 11.2 14 11.7C14.3 11.2 14.8 10.8 15.5 10.8C16.7 10.8 17.8 11.7 17.8 13.1C17.8 15.9 14 18.3 14 18.3Z"
+        fill="#FFFFFF"
+        stroke={color}
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function PromisesStrip() {
   return (
-    <section className="max-w-page px-margin mx-auto w-full pb-4" aria-label="Engagements Squishies">
+    <section
+      className="max-w-page px-margin mx-auto w-full pb-6 sm:pb-8"
+      aria-labelledby="promises-heading"
+    >
+      <div className="mb-4 sm:mb-6">
+        <p className="type-overline text-primary mb-1">L&apos;expérience Squishies</p>
+        <h2 id="promises-heading" className="type-heading-xl text-on-surface">
+          Pourquoi on les adore
+        </h2>
+      </div>
+
       <ul role="list" className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
         {PROMISES.map((item) => (
           <li
-            key={item.title}
-            className="bg-surface-elevated border-border/80 rounded-3xl border p-4 sm:p-5"
+            key={item.id}
+            className={`${item.cardClass} squishies-card-hover relative overflow-hidden rounded-[1.75rem] border p-4 sm:p-5`}
           >
             <span
-              className={`${item.bg} mb-3 inline-flex size-8 items-center justify-center rounded-full`}
               aria-hidden="true"
-            >
-              <span className="bg-on-surface/70 size-2 rounded-full" />
-            </span>
-            <h3 className="font-heading text-on-surface text-sm font-semibold sm:text-base">
+              className={`${item.orbClass} pointer-events-none absolute -top-7 -right-7 size-24 rounded-full blur-md`}
+            />
+
+            <div className="relative flex items-start justify-between gap-2">
+              <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl bg-white/95 shadow-sm ring-1 ring-white sm:size-12">
+                <PromiseIcon id={item.id} color={item.iconColor} softFill={item.iconSoftFill} />
+              </span>
+              <span
+                className={`${item.tagClass} inline-flex rounded-full border px-2 py-0.5 text-[10px] font-bold tracking-tight sm:px-2.5 sm:text-[11px]`}
+              >
+                {item.tag}
+              </span>
+            </div>
+
+            <h3 className="font-heading text-on-surface relative mt-3.5 text-sm leading-snug font-bold sm:text-base">
               {item.title}
             </h3>
-            <p className="text-on-surface-secondary mt-1 text-xs leading-relaxed sm:text-sm">
+            <p className="text-on-surface/75 relative mt-1 text-xs leading-relaxed sm:text-sm">
               {item.desc}
             </p>
           </li>
