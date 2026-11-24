@@ -122,7 +122,7 @@ export function HomeHero({
                 href="#catalogue"
                 className="rounded-button button-primary squish-press focus-visible:outline-surface inline-flex h-12 w-full items-center justify-center gap-2 px-5 text-sm font-bold no-underline shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                <span>Découvrir les {totalCount > 0 ? totalCount : ""} squishies</span>
+                <span>Découvrir les squishies</span>
                 <span aria-hidden="true">↓</span>
               </a>
               {adventProduct ? (
@@ -164,7 +164,7 @@ export function HomeHero({
                 href="#catalogue"
                 className="rounded-button button-primary squish-press focus-visible:outline-surface inline-flex h-12 items-center justify-center gap-2 px-6 text-sm font-bold no-underline shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                <span>Découvrir les {totalCount > 0 ? totalCount : ""} squishies</span>
+                <span>Découvrir les squishies</span>
                 <span aria-hidden="true">↓</span>
               </a>
 
