@@ -1,5 +1,5 @@
 import { gql } from "@shopify/hydrogen";
-import { useMemo, useState, type CSSProperties } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router";
 
 import {
@@ -141,31 +141,37 @@ function QuickCategoryPills({
   );
 }
 
+type SlideDirection = "left" | "right";
+
 function CatalogSection({
   products,
   activeCollection,
   transitionId,
+  slideDirection,
   onReset,
 }: {
   products: readonly ProductCardData[];
   activeCollection: HomeCollectionData | null;
   transitionId: number;
+  slideDirection: SlideDirection;
   onReset: () => void;
 }) {
   const countLabel = `${products.length} ${products.length > 1 ? "produits" : "produit"}`;
-  const shouldAnimate = transitionId > 0;
+  const slideClass =
+    transitionId > 0
+      ? slideDirection === "right"
+        ? "catalog-slide-from-right"
+        : "catalog-slide-from-left"
+      : undefined;
 
   return (
     <section
       id="catalogue"
-      className="w-full scroll-mt-20 pt-4 pb-10 sm:pt-8 sm:pb-14"
+      className="w-full scroll-mt-20 overflow-x-clip pt-4 pb-10 sm:pt-8 sm:pb-14"
       aria-labelledby="catalogue-heading"
     >
       <div className="max-w-page px-margin mx-auto mb-5 flex items-end justify-between gap-4 sm:mb-7">
-        <div
-          key={`heading-${transitionId}`}
-          className={shouldAnimate ? "squishy-heading-enter" : undefined}
-        >
+        <div key={`heading-${transitionId}`} className={slideClass}>
           <p className="type-overline text-primary mb-1">
             {activeCollection ? "Univers sélectionné" : "La collection"} ·{" "}
             <span className="tabular-nums">{countLabel}</span>
@@ -194,22 +200,14 @@ function CatalogSection({
       </div>
 
       {products.length > 0 ? (
-        <div className="max-w-page px-margin mx-auto">
+        <div className="max-w-page px-margin mx-auto contain-paint">
           <ul
             key={`grid-${transitionId}`}
             role="list"
-            className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 lg:gap-6"
+            className={`grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 lg:gap-6 ${slideClass ?? ""}`}
           >
-            {products.map((product, index) => (
-              <li
-                key={product.handle}
-                className={shouldAnimate ? "squishy-card-enter" : undefined}
-                style={
-                  shouldAnimate
-                    ? ({ "--stagger-delay": `${Math.min(index * 45, 360)}ms` } as CSSProperties)
-                    : undefined
-                }
-              >
+            {products.map((product) => (
+              <li key={product.handle}>
                 <ProductCard product={product} />
               </li>
             ))}
@@ -366,9 +364,19 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const { featuredProducts, featuredCollections } = loaderData;
   const [activeCollectionHandle, setActiveCollectionHandle] = useState<string | null>(null);
   const [transitionId, setTransitionId] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<SlideDirection>("right");
+
+  const getPillIndex = (handle: string | null) => {
+    if (handle === null) return 0;
+    const foundIndex = featuredCollections.findIndex((c) => c.handle === handle);
+    return foundIndex === -1 ? 0 : foundIndex + 1;
+  };
 
   const handleSelectCollection = (handle: string | null) => {
     if (handle === activeCollectionHandle) return;
+    const prevIndex = getPillIndex(activeCollectionHandle);
+    const nextIndex = getPillIndex(handle);
+    setSlideDirection(nextIndex >= prevIndex ? "right" : "left");
     setActiveCollectionHandle(handle);
     setTransitionId((count) => count + 1);
   };
@@ -407,6 +415,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         products={visibleProducts}
         activeCollection={activeCollection}
         transitionId={transitionId}
+        slideDirection={slideDirection}
         onReset={() => handleSelectCollection(null)}
       />
       <ShopByCategory collections={featuredCollections} />
