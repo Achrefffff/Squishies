@@ -314,14 +314,8 @@ body {
   }
 }
 
-/* Body scroll lock while any drawer or mobile intro is open — pure CSS */
+/* Body scroll lock while any drawer is open — pure CSS */
 body:has(.drawer-right[open]),
 body:has(.drawer-left[open]) {
   overflow: hidden;
-}
-
-@media (max-width: 767px) {
-  body:has([data-mobile-intro="active"]) {
-    overflow: hidden;
-  }
 }
