@@ -3,9 +3,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 type IntroPhase = "active" | "fading" | "done";
 
 const INTRO_VIDEO_SRC = "/videos/intro-mobile.mp4";
-const FADE_DURATION_MS = 500;
-const LOAD_TIMEOUT_MS = 4500;
-const MAX_DURATION_MS = 14000;
+const PLAY_DURATION_SECONDS = 3;
+const PLAY_DURATION_MS = PLAY_DURATION_SECONDS * 1000;
+const FADE_DURATION_MS = 450;
+const LOAD_TIMEOUT_MS = 4000;
+const MAX_DURATION_MS = 7000;
 
 export function MobileIntroVideo() {
   const [phase, setPhase] = useState<IntroPhase>("active");
@@ -48,6 +50,14 @@ export function MobileIntroVideo() {
       window.clearTimeout(loadTimer);
     };
   }, [shouldLoadVideo, videoReady, phase, finishIntro]);
+
+  useEffect(() => {
+    if (!videoReady || phase !== "active") return;
+    const playTimer = window.setTimeout(finishIntro, PLAY_DURATION_MS);
+    return () => {
+      window.clearTimeout(playTimer);
+    };
+  }, [videoReady, phase, finishIntro]);
 
   useEffect(() => {
     if (!shouldLoadVideo) return;
@@ -108,6 +118,11 @@ export function MobileIntroVideo() {
           disablePictureInPicture
           disableRemotePlayback
           onPlaying={() => setVideoReady(true)}
+          onTimeUpdate={(event) => {
+            if (event.currentTarget.currentTime >= PLAY_DURATION_SECONDS) {
+              finishIntro();
+            }
+          }}
           onEnded={finishIntro}
           onError={finishIntro}
           className={`h-full w-full object-cover motion-safe:transition-opacity motion-safe:duration-300 ${
