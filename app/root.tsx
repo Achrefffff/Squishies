@@ -17,6 +17,7 @@ import { AnnouncementBar } from "~/components/AnnouncementBar";
 import { CartDrawer } from "~/components/CartDrawer";
 import { Footer } from "~/components/Footer";
 import { Header } from "~/components/Header";
+import { MobileIntroVideo } from "~/components/MobileIntroVideo";
 import { SearchDrawer } from "~/components/SearchDrawer";
 import { CartProvider } from "~/lib/cart";
 import { cartHandlers } from "~/lib/cart-handlers";
@@ -157,6 +158,7 @@ export function Layout({ children }: { children: ReactNode }) {
 export default function App({ loaderData }: Route.ComponentProps) {
   return (
     <CartProvider initialData={loaderData.cartData}>
+      <MobileIntroVideo />
       <PageViewedTracker />
       <CartAnalyticsTracker />
       <AnnouncementBar />
