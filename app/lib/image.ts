@@ -10,9 +10,14 @@ function isShopifyImageHost(hostname: string) {
   return SHOPIFY_CDN_HOSTS.some((host) => hostname === host || hostname.endsWith(`.${host}`));
 }
 
+function isGifPath(pathname: string) {
+  return pathname.toLowerCase().endsWith(".gif");
+}
+
 /**
  * Rewrites Shopify CDN / mock.shop URLs with width/height/crop sizing params
- * while preserving existing query parameters. Third-party URLs pass through unchanged.
+ * while preserving existing query parameters. Animated GIFs and third-party URLs
+ * pass through unchanged so GIF animation is never flattened by CDN resizing.
  */
 export function shopifyImageUrl(url: string, options: ShopifyImageOptions = {}): string {
   let parsed: URL;
@@ -22,7 +27,7 @@ export function shopifyImageUrl(url: string, options: ShopifyImageOptions = {}):
     return url;
   }
 
-  if (!isShopifyImageHost(parsed.hostname)) return url;
+  if (!isShopifyImageHost(parsed.hostname) || isGifPath(parsed.pathname)) return url;
 
   if (options.width) parsed.searchParams.set("width", String(options.width));
   if (options.height) parsed.searchParams.set("height", String(options.height));
@@ -40,7 +45,7 @@ export function shopifyImageSrcSet(url: string, widths: readonly number[]): stri
     return undefined;
   }
 
-  if (!isShopifyImageHost(parsed.hostname)) return undefined;
+  if (!isShopifyImageHost(parsed.hostname) || isGifPath(parsed.pathname)) return undefined;
 
   return widths
     .map((width) => `${shopifyImageUrl(url, { width })} ${width}w`)
