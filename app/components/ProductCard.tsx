@@ -96,6 +96,9 @@ function getSensoryBadge(tags: readonly string[]): { label: string; className: s
   if (normalized.some((t) => t.includes("noël") || t.includes("avent"))) {
     return { label: "Édition Noël", className: "bg-festive text-surface" };
   }
+  if (normalized.some((t) => t === "xxl")) {
+    return { label: "Format XXL", className: "bg-[#FFE3D3] text-[#9A3412]" };
+  }
   if (normalized.some((t) => t.includes("crispy") || t.includes("crackle"))) {
     return { label: "Craquant", className: "bg-pastel-mint text-[#145339]" };
   }

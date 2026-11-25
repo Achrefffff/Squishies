@@ -13,7 +13,7 @@ export function meta({ matches }: Route.MetaArgs) {
     { title: formatPageTitle("Collections", shopName) },
     {
       name: "description",
-      content: `Explorez tous les univers squishies chez ${shopName} : Mystery Dumplings, Crispy & Craquants, Gourmandises & Fruits, Noël & Cadeaux.`,
+      content: `Explorez tous les univers squishies chez ${shopName} : Mystery Dumplings, Format XXL, Crispy & Craquants, Gourmandises & Fruits, Animaux Kawaii, Noël & Cadeaux.`,
     },
   ];
 }
@@ -88,7 +88,7 @@ function CollectionsGrid({ collections }: { collections: readonly CollectionNode
   return (
     <>
       <h2 className="sr-only">Parcourir les collections</h2>
-      <ul role="list" className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+      <ul role="list" className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
         {collections.map((collection, index) => (
           <li key={collection.handle}>
             <CollectionCard collection={collection} priority={index < 2} />

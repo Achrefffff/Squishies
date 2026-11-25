@@ -9,8 +9,10 @@ import { MobileNav, MobileNavTrigger } from "./MobileNav";
 
 export const NAV_COLLECTIONS = [
   { label: "Mystery Dumplings", to: "/collections/mystery-dumplings" },
+  { label: "Format XXL", to: "/collections/squishies-xxl" },
   { label: "Crispy & Craquants", to: "/collections/crispy-et-craquants" },
   { label: "Gourmandises & Fruits", to: "/collections/gourmandises-et-fruits" },
+  { label: "Animaux Kawaii", to: "/collections/animaux-kawaii" },
   { label: "Noël & Cadeaux", to: "/collections/noel-et-cadeaux" },
 ] as const;
 

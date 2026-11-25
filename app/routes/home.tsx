@@ -19,15 +19,15 @@ import type { Route } from "./+types/home";
 const HOME_QUERY = gql(
   `
     query Home {
-      products(first: 12, sortKey: CREATED_AT, reverse: false) {
+      products(first: 50, sortKey: CREATED_AT, reverse: false) {
         nodes {
           ...ProductCard
         }
       }
-      collections(first: 4) {
+      collections(first: 10) {
         nodes {
           ...CollectionCard
-          catalogProducts: products(first: 12) {
+          catalogProducts: products(first: 50) {
             nodes {
               id
             }
@@ -93,6 +93,18 @@ const PILL_PALETTE = [
     active: "bg-[#8B35DB] text-white border-[#6B21A8] shadow-sm ring-2 ring-[#8B35DB]/25",
     halo: "border-[#8B35DB]",
     sparkle: "#8B35DB",
+  },
+  {
+    idle: "bg-[#FFE6DA] text-[#9A3412] border-[#FFB899] hover:bg-[#FFD8C4]",
+    active: "bg-[#EA580C] text-white border-[#C2410C] shadow-sm ring-2 ring-[#EA580C]/25",
+    halo: "border-[#EA580C]",
+    sparkle: "#EA580C",
+  },
+  {
+    idle: "bg-[#D8F7F2] text-[#0F5E59] border-[#8BE0D5] hover:bg-[#C3F0E9]",
+    active: "bg-[#0D9488] text-white border-[#0F766E] shadow-sm ring-2 ring-[#0D9488]/25",
+    halo: "border-[#0D9488]",
+    sparkle: "#0D9488",
   },
 ] as const;
 
@@ -283,7 +295,7 @@ function ShopByCategory({ collections }: { collections: readonly CollectionCardD
 
       <ul
         role="list"
-        className="max-w-page px-margin mx-auto grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4"
+        className="max-w-page px-margin mx-auto grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3"
       >
         {collections.map((collection) => (
           <li key={collection.handle}>
