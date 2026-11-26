@@ -56,14 +56,14 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
   return (
     <header className="border-border bg-surface/92 sticky top-0 z-40 border-b backdrop-blur-md">
       <div
-        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 md:flex md:h-[72px] md:justify-between"
+        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:flex lg:h-[72px] lg:justify-between"
         data-header-nav-group
       >
-        <div className="-ms-2 flex items-center justify-self-start md:hidden" data-hamburger-wrapper>
+        <div className="-ms-2 flex items-center justify-self-start lg:hidden" data-hamburger-wrapper>
           <MobileNavTrigger />
         </div>
 
-        <div className="flex min-w-0 items-center justify-self-center md:shrink-0 md:justify-self-start">
+        <div className="flex min-w-0 items-center justify-self-center lg:shrink-0 lg:justify-self-start">
           <Link
             to="/"
             aria-label={shopInfo.name}
@@ -90,24 +90,18 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
 
         <nav
           aria-label="Navigation principale"
-          className="mx-4 hidden min-w-0 flex-1 items-center justify-center gap-1 overflow-x-auto md:flex lg:gap-2"
+          className="mx-3 hidden flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-1.5"
           data-desktop-nav
         >
           {NAV_COLLECTIONS.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="text-on-surface hover:bg-surface-secondary focus-visible:outline-accent shrink-0 rounded-full px-3.5 py-2 text-sm font-medium whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors"
+              className="text-on-surface hover:bg-surface-secondary focus-visible:outline-accent shrink-0 rounded-full px-2.5 py-2 text-[13px] font-medium whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors xl:px-3.5 xl:text-sm"
             >
               {item.label}
             </Link>
           ))}
-          <Link
-            to="/collections"
-            className="text-on-surface-secondary hover:bg-surface-secondary hover:text-on-surface focus-visible:outline-accent shrink-0 rounded-full px-3.5 py-2 text-sm font-medium whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors"
-          >
-            Collections
-          </Link>
         </nav>
 
         <div className="flex shrink-0 items-center justify-self-end gap-0.5">
