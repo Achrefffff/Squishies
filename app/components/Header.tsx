@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 
 import { useCart } from "~/lib/cart";
@@ -8,12 +8,42 @@ import type { StorefrontShop } from "~/lib/storefront-shop";
 import { MobileNav, MobileNavTrigger } from "./MobileNav";
 
 export const NAV_COLLECTIONS = [
-  { label: "Mystery Dumplings", to: "/collections/mystery-dumplings" },
-  { label: "Format XXL", to: "/collections/squishies-xxl" },
-  { label: "Crispy & Craquants", to: "/collections/crispy-et-craquants" },
-  { label: "Gourmandises & Fruits", to: "/collections/gourmandises-et-fruits" },
-  { label: "Animaux Kawaii", to: "/collections/animaux-kawaii" },
-  { label: "Noël & Cadeaux", to: "/collections/noel-et-cadeaux" },
+  {
+    label: "Mystery Dumplings",
+    to: "/collections/mystery-dumplings",
+    desc: "Pailletés en panier vapeur",
+    pillBg: "bg-[#DFF0FF] text-[#0E4A8A]",
+  },
+  {
+    label: "Format XXL",
+    to: "/collections/squishies-xxl",
+    desc: "Fraise & grappe géantes",
+    pillBg: "bg-[#FFE6DA] text-[#9A3412]",
+  },
+  {
+    label: "Crispy & Craquants",
+    to: "/collections/crispy-et-craquants",
+    desc: "Texture crépitante anti-stress",
+    pillBg: "bg-[#E3F9D4] text-[#255910]",
+  },
+  {
+    label: "Gourmandises & Fruits",
+    to: "/collections/gourmandises-et-fruits",
+    desc: "Donut, beurre, pêche & fruits",
+    pillBg: "bg-[#FFF0CC] text-[#7A4200]",
+  },
+  {
+    label: "Animaux Kawaii",
+    to: "/collections/animaux-kawaii",
+    desc: "Lapin, hippocampe & licorne",
+    pillBg: "bg-[#F2E3FF] text-[#5A1E94]",
+  },
+  {
+    label: "Noël & Cadeaux",
+    to: "/collections/noel-et-cadeaux",
+    desc: "Calendrier 24 surprises & coffrets",
+    pillBg: "bg-[#D8F3E5] text-[#145339]",
+  },
 ] as const;
 
 function cartCountLabel(count: number) {
@@ -51,13 +81,39 @@ export function SquishiesWordmark({
 export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
   const totalQuantity = useCart((state) => state.data.totalQuantity);
   const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
+  const [megaOpen, setMegaOpen] = useState(false);
+  const megaRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
   const logo = shopInfo.logo;
 
+  useEffect(() => {
+    setMegaOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!megaOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMegaOpen(false);
+    };
+    const onPointerDown = (event: MouseEvent) => {
+      if (megaRef.current && !megaRef.current.contains(event.target as Node)) {
+        setMegaOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("mousedown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("mousedown", onPointerDown);
+    };
+  }, [megaOpen]);
+
+  const isCollectionPage = pathname.startsWith("/collections");
+
   return (
-    <header className="border-border bg-surface/92 sticky top-0 z-40 border-b backdrop-blur-md lg:border-0 lg:bg-transparent lg:px-margin lg:pt-3 lg:pb-1 lg:backdrop-blur-none">
+    <header className="border-border bg-surface/95 sticky top-0 z-40 border-b backdrop-blur-md">
       <div
-        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:flex lg:h-[68px] lg:justify-between lg:rounded-full lg:border lg:border-[#F5D0E0] lg:bg-surface/92 lg:px-5 lg:shadow-[0_14px_34px_-18px_rgba(232,74,127,0.34),0_2px_10px_-2px_rgba(35,25,45,0.06)] lg:backdrop-blur-md"
+        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:flex lg:h-[76px] lg:justify-between lg:gap-6"
         data-header-nav-group
       >
         <div className="-ms-2 flex items-center justify-self-start lg:hidden" data-hamburger-wrapper>
@@ -91,49 +147,140 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
 
         <nav
           aria-label="Navigation principale"
-          className="mx-3 hidden flex-1 items-center justify-center gap-1 lg:flex xl:gap-1.5"
+          className="hidden items-center gap-1.5 lg:flex"
           data-desktop-nav
         >
-          {NAV_COLLECTIONS.map((item) => {
-            const isActive = pathname === item.to;
-            const isFestive = item.to.includes("noel");
+          <Link
+            to="/"
+            aria-current={pathname === "/" ? "page" : undefined}
+            className={`font-heading squish-press focus-visible:outline-accent rounded-full px-4 py-2 text-sm font-semibold no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              pathname === "/"
+                ? "bg-pastel-rose text-primary"
+                : "text-on-surface hover:bg-pastel-rose/60 hover:text-primary"
+            }`}
+          >
+            Accueil
+          </Link>
 
-            const itemClass = isFestive
-              ? isActive
-                ? "bg-festive text-surface border border-festive shadow-xs"
-                : "bg-festive/10 text-festive border border-festive/25 hover:bg-festive hover:text-surface"
-              : isActive
-                ? "bg-pastel-rose text-primary shadow-2xs"
-                : "text-on-surface hover:bg-pastel-rose/70 hover:text-primary";
-
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                aria-current={isActive ? "page" : undefined}
-                className={`font-heading squish-press focus-visible:outline-accent shrink-0 rounded-full px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 xl:px-3.5 xl:text-sm ${itemClass}`}
+          <div
+            ref={megaRef}
+            className="relative"
+            onMouseEnter={() => setMegaOpen(true)}
+            onMouseLeave={() => setMegaOpen(false)}
+          >
+            <button
+              type="button"
+              aria-expanded={megaOpen}
+              aria-haspopup="true"
+              onClick={() => setMegaOpen((open) => !open)}
+              className={`font-heading squish-press focus-visible:outline-accent inline-flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+                megaOpen || isCollectionPage
+                  ? "bg-pastel-rose text-primary"
+                  : "text-on-surface hover:bg-pastel-rose/60 hover:text-primary"
+              }`}
+            >
+              <span>Nos univers</span>
+              <svg
+                viewBox="0 0 16 16"
+                className={`size-3.5 motion-safe:transition-transform motion-safe:duration-200 ${megaOpen ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                {item.label}
-              </Link>
-            );
-          })}
+                <path d="M4 6l4 4 4-4" />
+              </svg>
+            </button>
+
+            {megaOpen ? (
+              <div className="absolute top-full left-1/2 z-50 w-[540px] -translate-x-1/2 pt-3">
+                <div className="bg-surface-elevated border-border/90 overflow-hidden rounded-3xl border p-4 shadow-[0_24px_48px_-18px_rgba(35,25,45,0.22)]">
+                  <div className="mb-3 flex items-center justify-between px-1">
+                    <p className="type-overline text-primary">Explorer par univers</p>
+                    <Link
+                      to="/collections"
+                      onClick={() => setMegaOpen(false)}
+                      className="text-on-surface-secondary hover:text-primary text-xs font-semibold no-underline"
+                    >
+                      Toutes les collections →
+                    </Link>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {NAV_COLLECTIONS.map((item) => {
+                      const active = pathname === item.to;
+                      return (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          onClick={() => setMegaOpen(false)}
+                          className={`group flex items-start gap-3 rounded-2xl border p-3 no-underline motion-safe:transition-colors ${
+                            active
+                              ? "border-primary/40 bg-pastel-rose/40"
+                              : "border-transparent bg-surface-secondary/60 hover:border-border hover:bg-surface-secondary"
+                          }`}
+                        >
+                          <span
+                            className={`${item.pillBg} mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold`}
+                            aria-hidden="true"
+                          >
+                            ✦
+                          </span>
+                          <span className="min-w-0">
+                            <span className="font-heading text-on-surface group-hover:text-primary block text-sm font-semibold">
+                              {item.label}
+                            </span>
+                            <span className="text-on-surface-secondary mt-0.5 block text-xs leading-snug">
+                              {item.desc}
+                            </span>
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          <Link
+            to="/collections/squishies-xxl"
+            aria-current={pathname === "/collections/squishies-xxl" ? "page" : undefined}
+            className={`font-heading squish-press focus-visible:outline-accent inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
+              pathname === "/collections/squishies-xxl"
+                ? "bg-[#FFE6DA] text-[#9A3412]"
+                : "text-on-surface hover:bg-[#FFE6DA]/80 hover:text-[#9A3412]"
+            }`}
+          >
+            <span>Format XXL</span>
+          </Link>
+
+          <Link
+            to="/collections/noel-et-cadeaux"
+            aria-current={pathname === "/collections/noel-et-cadeaux" ? "page" : undefined}
+            className="font-heading bg-festive text-surface squish-press focus-visible:outline-accent inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold no-underline shadow-xs hover:opacity-92 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+          >
+            <span>Édition Noël</span>
+          </Link>
         </nav>
 
-        <div className="flex shrink-0 items-center justify-self-end gap-1">
+        <div className="flex shrink-0 items-center justify-self-end gap-1.5">
           <Link
             to="/search"
-            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-pastel-rose/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-10"
+            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-surface-secondary no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-auto lg:gap-2 lg:border lg:border-border lg:bg-surface-secondary/75 lg:px-3.5 lg:text-xs lg:font-medium lg:text-on-surface-secondary lg:hover:border-primary/40 lg:hover:text-on-surface"
             aria-label="Rechercher"
             aria-controls={SEARCH_DRAWER_ID}
             aria-haspopup="dialog"
             data-testid="search-trigger"
             onClick={(event) => openDialogFromLinkClick(event, SEARCH_DRAWER_ID)}
           >
-            <img src="/icons/icon-search.svg" alt="" className="size-5" aria-hidden="true" />
+            <img src="/icons/icon-search.svg" alt="" className="size-4 lg:size-4" aria-hidden="true" />
+            <span className="hidden xl:inline">Rechercher un squishy…</span>
           </Link>
           <Link
             to="/account"
-            className="text-on-surface hover:bg-pastel-rose/60 focus-visible:outline-accent hidden h-10 w-10 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors lg:inline-flex"
+            className="text-on-surface hover:bg-surface-secondary focus-visible:outline-accent hidden h-10 w-10 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors lg:inline-flex"
             aria-label="Mon compte"
           >
             <img src="/icons/icon-user.svg" alt="" className="size-5" aria-hidden="true" />
