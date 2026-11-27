@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router";
 
 import { useCart } from "~/lib/cart";
@@ -11,38 +11,38 @@ export const NAV_COLLECTIONS = [
   {
     label: "Mystery Dumplings",
     to: "/collections/mystery-dumplings",
-    desc: "Pailletés en panier vapeur",
-    pillBg: "bg-[#DFF0FF] text-[#0E4A8A]",
+    idleClass: "bg-[#E8F4FF] text-[#0E4A8A] border-[#B8DCFF] hover:bg-[#D6ECFF]",
+    activeClass: "bg-[#1E88E5] text-white border-[#1565C0] shadow-xs",
   },
   {
     label: "Format XXL",
     to: "/collections/squishies-xxl",
-    desc: "Fraise & grappe géantes",
-    pillBg: "bg-[#FFE6DA] text-[#9A3412]",
+    idleClass: "bg-[#FFECE2] text-[#9A3412] border-[#FFC7AE] hover:bg-[#FFDEC9]",
+    activeClass: "bg-[#EA580C] text-white border-[#C2410C] shadow-xs",
   },
   {
     label: "Crispy & Craquants",
     to: "/collections/crispy-et-craquants",
-    desc: "Texture crépitante anti-stress",
-    pillBg: "bg-[#E3F9D4] text-[#255910]",
+    idleClass: "bg-[#EAFAE0] text-[#255910] border-[#B5E896] hover:bg-[#D9F6C6]",
+    activeClass: "bg-[#3FA322] text-white border-[#2E7D17] shadow-xs",
   },
   {
     label: "Gourmandises & Fruits",
     to: "/collections/gourmandises-et-fruits",
-    desc: "Donut, beurre, pêche & fruits",
-    pillBg: "bg-[#FFF0CC] text-[#7A4200]",
+    idleClass: "bg-[#FFF4D6] text-[#7A4200] border-[#FFD980] hover:bg-[#FFEBB8]",
+    activeClass: "bg-[#E68A00] text-white border-[#B86E00] shadow-xs",
   },
   {
     label: "Animaux Kawaii",
     to: "/collections/animaux-kawaii",
-    desc: "Lapin, hippocampe & licorne",
-    pillBg: "bg-[#F2E3FF] text-[#5A1E94]",
+    idleClass: "bg-[#F5EAFF] text-[#5A1E94] border-[#DAC0FF] hover:bg-[#EBD6FF]",
+    activeClass: "bg-[#8B35DB] text-white border-[#6B21A8] shadow-xs",
   },
   {
     label: "Noël & Cadeaux",
     to: "/collections/noel-et-cadeaux",
-    desc: "Calendrier 24 surprises & coffrets",
-    pillBg: "bg-[#D8F3E5] text-[#145339]",
+    idleClass: "bg-[#E1F5EB] text-[#145339] border-[#A7DFC3] hover:bg-[#CBEEDB]",
+    activeClass: "bg-festive text-surface border-festive shadow-xs",
   },
 ] as const;
 
@@ -81,51 +81,39 @@ export function SquishiesWordmark({
 export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
   const totalQuantity = useCart((state) => state.data.totalQuantity);
   const [failedLogoUrl, setFailedLogoUrl] = useState<string | null>(null);
-  const [megaOpen, setMegaOpen] = useState(false);
-  const megaRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
   const logo = shopInfo.logo;
 
-  useEffect(() => {
-    setMegaOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!megaOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMegaOpen(false);
-    };
-    const onPointerDown = (event: MouseEvent) => {
-      if (megaRef.current && !megaRef.current.contains(event.target as Node)) {
-        setMegaOpen(false);
-      }
-    };
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("mousedown", onPointerDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("mousedown", onPointerDown);
-    };
-  }, [megaOpen]);
-
-  const isCollectionPage = pathname.startsWith("/collections");
-
   return (
     <header className="border-border bg-surface/95 sticky top-0 z-40 border-b backdrop-blur-md">
+      {/* Ligne 1 : Recherche (gauche) · Logo centré star · Compte & Panier (droite) */}
       <div
-        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:flex lg:h-[76px] lg:justify-between lg:gap-6"
+        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:h-[74px]"
         data-header-nav-group
       >
-        <div className="-ms-2 flex items-center justify-self-start lg:hidden" data-hamburger-wrapper>
-          <MobileNavTrigger />
+        <div className="flex items-center justify-self-start">
+          <div className="-ms-2 lg:hidden" data-hamburger-wrapper>
+            <MobileNavTrigger />
+          </div>
+          <Link
+            to="/search"
+            className="squish-press focus-visible:outline-accent hidden h-10 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface-secondary/75 px-4 text-xs font-medium text-on-surface-secondary no-underline hover:border-primary/40 hover:text-on-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:inline-flex"
+            aria-label="Rechercher un squishy"
+            aria-controls={SEARCH_DRAWER_ID}
+            aria-haspopup="dialog"
+            onClick={(event) => openDialogFromLinkClick(event, SEARCH_DRAWER_ID)}
+          >
+            <img src="/icons/icon-search.svg" alt="" className="size-4" aria-hidden="true" />
+            <span>Rechercher un squishy…</span>
+          </Link>
         </div>
 
-        <div className="flex min-w-0 items-center justify-self-center lg:shrink-0 lg:justify-self-start">
+        <div className="flex min-w-0 items-center justify-self-center">
           <Link
             to="/"
             aria-label={shopInfo.name}
             title={shopInfo.name}
-            className="text-on-surface focus-visible:outline-accent inline-flex max-w-36 min-w-0 items-center justify-center rounded-xl py-1 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:max-w-48"
+            className="text-on-surface focus-visible:outline-accent inline-flex max-w-36 min-w-0 items-center justify-center rounded-xl py-1 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:max-w-52"
           >
             {logo && failedLogoUrl !== logo.url ? (
               <img
@@ -133,154 +121,33 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
                 alt={logo.altText ?? shopInfo.name}
                 width={logo.width ?? undefined}
                 height={logo.height ?? undefined}
-                className="h-auto max-h-11 w-auto max-w-full object-contain"
+                className="h-auto max-h-11 w-auto max-w-full object-contain lg:max-h-14"
                 ref={(img) => {
                   if (img?.complete && img.naturalWidth === 0) setFailedLogoUrl(logo.url);
                 }}
                 onError={() => setFailedLogoUrl(logo.url)}
               />
             ) : (
-              <SquishiesWordmark name={shopInfo.name} />
+              <SquishiesWordmark name={shopInfo.name} className="h-10 w-auto sm:h-11 lg:h-14" />
             )}
           </Link>
         </div>
 
-        <nav
-          aria-label="Navigation principale"
-          className="hidden items-center gap-1.5 lg:flex"
-          data-desktop-nav
-        >
-          <Link
-            to="/"
-            aria-current={pathname === "/" ? "page" : undefined}
-            className={`font-heading squish-press focus-visible:outline-accent rounded-full px-4 py-2 text-sm font-semibold no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-              pathname === "/"
-                ? "bg-pastel-rose text-primary"
-                : "text-on-surface hover:bg-pastel-rose/60 hover:text-primary"
-            }`}
-          >
-            Accueil
-          </Link>
-
-          <div
-            ref={megaRef}
-            className="relative"
-            onMouseEnter={() => setMegaOpen(true)}
-            onMouseLeave={() => setMegaOpen(false)}
-          >
-            <button
-              type="button"
-              aria-expanded={megaOpen}
-              aria-haspopup="true"
-              onClick={() => setMegaOpen((open) => !open)}
-              className={`font-heading squish-press focus-visible:outline-accent inline-flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-                megaOpen || isCollectionPage
-                  ? "bg-pastel-rose text-primary"
-                  : "text-on-surface hover:bg-pastel-rose/60 hover:text-primary"
-              }`}
-            >
-              <span>Nos univers</span>
-              <svg
-                viewBox="0 0 16 16"
-                className={`size-3.5 motion-safe:transition-transform motion-safe:duration-200 ${megaOpen ? "rotate-180" : ""}`}
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M4 6l4 4 4-4" />
-              </svg>
-            </button>
-
-            {megaOpen ? (
-              <div className="absolute top-full left-1/2 z-50 w-[540px] -translate-x-1/2 pt-3">
-                <div className="bg-surface-elevated border-border/90 overflow-hidden rounded-3xl border p-4 shadow-[0_24px_48px_-18px_rgba(35,25,45,0.22)]">
-                  <div className="mb-3 flex items-center justify-between px-1">
-                    <p className="type-overline text-primary">Explorer par univers</p>
-                    <Link
-                      to="/collections"
-                      onClick={() => setMegaOpen(false)}
-                      className="text-on-surface-secondary hover:text-primary text-xs font-semibold no-underline"
-                    >
-                      Toutes les collections →
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {NAV_COLLECTIONS.map((item) => {
-                      const active = pathname === item.to;
-                      return (
-                        <Link
-                          key={item.to}
-                          to={item.to}
-                          onClick={() => setMegaOpen(false)}
-                          className={`group flex items-start gap-3 rounded-2xl border p-3 no-underline motion-safe:transition-colors ${
-                            active
-                              ? "border-primary/40 bg-pastel-rose/40"
-                              : "border-transparent bg-surface-secondary/60 hover:border-border hover:bg-surface-secondary"
-                          }`}
-                        >
-                          <span
-                            className={`${item.pillBg} mt-0.5 inline-flex size-8 shrink-0 items-center justify-center rounded-xl text-xs font-bold`}
-                            aria-hidden="true"
-                          >
-                            ✦
-                          </span>
-                          <span className="min-w-0">
-                            <span className="font-heading text-on-surface group-hover:text-primary block text-sm font-semibold">
-                              {item.label}
-                            </span>
-                            <span className="text-on-surface-secondary mt-0.5 block text-xs leading-snug">
-                              {item.desc}
-                            </span>
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </div>
-
-          <Link
-            to="/collections/squishies-xxl"
-            aria-current={pathname === "/collections/squishies-xxl" ? "page" : undefined}
-            className={`font-heading squish-press focus-visible:outline-accent inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${
-              pathname === "/collections/squishies-xxl"
-                ? "bg-[#FFE6DA] text-[#9A3412]"
-                : "text-on-surface hover:bg-[#FFE6DA]/80 hover:text-[#9A3412]"
-            }`}
-          >
-            <span>Format XXL</span>
-          </Link>
-
-          <Link
-            to="/collections/noel-et-cadeaux"
-            aria-current={pathname === "/collections/noel-et-cadeaux" ? "page" : undefined}
-            className="font-heading bg-festive text-surface squish-press focus-visible:outline-accent inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold no-underline shadow-xs hover:opacity-92 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <span>Édition Noël</span>
-          </Link>
-        </nav>
-
-        <div className="flex shrink-0 items-center justify-self-end gap-1.5">
+        <div className="flex shrink-0 items-center justify-self-end gap-1">
           <Link
             to="/search"
-            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-surface-secondary no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-auto lg:gap-2 lg:border lg:border-border lg:bg-surface-secondary/75 lg:px-3.5 lg:text-xs lg:font-medium lg:text-on-surface-secondary lg:hover:border-primary/40 lg:hover:text-on-surface"
+            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-surface-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:hidden"
             aria-label="Rechercher"
             aria-controls={SEARCH_DRAWER_ID}
             aria-haspopup="dialog"
             data-testid="search-trigger"
             onClick={(event) => openDialogFromLinkClick(event, SEARCH_DRAWER_ID)}
           >
-            <img src="/icons/icon-search.svg" alt="" className="size-4 lg:size-4" aria-hidden="true" />
-            <span className="hidden xl:inline">Rechercher un squishy…</span>
+            <img src="/icons/icon-search.svg" alt="" className="size-5" aria-hidden="true" />
           </Link>
           <Link
             to="/account"
-            className="text-on-surface hover:bg-surface-secondary focus-visible:outline-accent hidden h-10 w-10 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors lg:inline-flex"
+            className="text-on-surface hover:bg-pastel-rose/60 focus-visible:outline-accent hidden h-10 w-10 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 motion-safe:transition-colors lg:inline-flex"
             aria-label="Mon compte"
           >
             <img src="/icons/icon-user.svg" alt="" className="size-5" aria-hidden="true" />
@@ -317,6 +184,43 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
           </span>
         </div>
       </div>
+
+      {/* Ligne 2 desktop : fines pilules pastel centrées */}
+      <nav
+        aria-label="Navigation principale"
+        className="hidden border-t border-[#F4DFEA] bg-surface-secondary/45 py-2.5 lg:block"
+        data-desktop-nav
+      >
+        <div className="max-w-page px-margin mx-auto flex flex-wrap items-center justify-center gap-2">
+          <Link
+            to="/"
+            aria-current={pathname === "/" ? "page" : undefined}
+            className={`font-heading squish-press focus-visible:outline-accent rounded-full border px-3.5 py-1 text-xs font-semibold whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 xl:text-[13px] ${
+              pathname === "/"
+                ? "border-[#D93275] bg-[#FF4D94] text-white shadow-xs"
+                : "border-[#FFBAD5] bg-[#FFEBF3] text-[#A81652] hover:bg-[#FFD9E8]"
+            }`}
+          >
+            Accueil
+          </Link>
+          {NAV_COLLECTIONS.map((item) => {
+            const isActive = pathname === item.to;
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={isActive ? "page" : undefined}
+                className={`font-heading squish-press focus-visible:outline-accent rounded-full border px-3.5 py-1 text-xs font-semibold whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 xl:text-[13px] ${
+                  isActive ? item.activeClass : item.idleClass
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
       <MobileNav shopName={shopInfo.name} />
     </header>
   );
