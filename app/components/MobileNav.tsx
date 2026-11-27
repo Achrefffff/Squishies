@@ -22,7 +22,7 @@ export function MobileNav({ shopName = "Squishies" }: { shopName?: string }) {
             type="button"
             commandfor={MOBILE_NAV_DRAWER_ID}
             command="close"
-            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full hover:bg-surface-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-pastel-rose/55 hover:bg-pastel-rose focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             aria-label="Fermer le menu"
             onClick={() => closeMobileNavDrawer()}
           >
@@ -129,7 +129,7 @@ export function MobileNavTrigger() {
       type="button"
       commandfor={MOBILE_NAV_DRAWER_ID}
       command="show-modal"
-      className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full hover:bg-surface-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+      className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-pastel-rose/55 hover:bg-pastel-rose focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
       aria-label="Ouvrir le menu"
       aria-controls={MOBILE_NAV_DRAWER_ID}
       aria-haspopup="dialog"

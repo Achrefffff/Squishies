@@ -55,12 +55,12 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
   const logo = shopInfo.logo;
 
   return (
-    <header className="border-border bg-surface/92 sticky top-0 z-40 border-b backdrop-blur-md lg:border-0 lg:bg-transparent lg:px-margin lg:pt-3 lg:pb-1 lg:backdrop-blur-none">
+    <header className="sticky top-0 z-40 px-3 pt-2.5 pb-1 sm:px-margin lg:pt-3">
       <div
-        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:flex lg:h-[68px] lg:justify-between lg:rounded-full lg:border lg:border-[#F5D0E0] lg:bg-surface/92 lg:px-5 lg:shadow-[0_14px_34px_-18px_rgba(232,74,127,0.34),0_2px_10px_-2px_rgba(35,25,45,0.06)] lg:backdrop-blur-md"
+        className="max-w-page mx-auto grid h-[60px] w-full grid-cols-[1fr_auto_1fr] items-center gap-1.5 rounded-full border border-[#F5D0E0] bg-surface/94 px-2.5 shadow-[0_14px_34px_-18px_rgba(232,74,127,0.34),0_2px_10px_-2px_rgba(35,25,45,0.06)] backdrop-blur-md sm:px-3.5 lg:flex lg:h-[68px] lg:justify-between lg:px-5"
         data-header-nav-group
       >
-        <div className="-ms-2 flex items-center justify-self-start lg:hidden" data-hamburger-wrapper>
+        <div className="flex items-center justify-self-start lg:hidden" data-hamburger-wrapper>
           <MobileNavTrigger />
         </div>
 
@@ -119,10 +119,10 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center justify-self-end gap-1">
+        <div className="flex shrink-0 items-center justify-self-end gap-1.5">
           <Link
             to="/search"
-            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-pastel-rose/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-10"
+            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-pastel-rose/55 font-medium hover:bg-pastel-rose focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-10 lg:bg-transparent lg:hover:bg-pastel-rose/60"
             aria-label="Rechercher"
             aria-controls={SEARCH_DRAWER_ID}
             aria-haspopup="dialog"
@@ -140,7 +140,7 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
           </Link>
           <Link
             to="/cart"
-            className="text-on-surface hover:bg-surface-secondary squish-press focus-visible:outline-accent relative inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-auto lg:gap-2 lg:bg-primary lg:px-4 lg:text-sm lg:font-bold lg:text-interactive-text lg:shadow-sm lg:hover:bg-primary-hover"
+            className="bg-primary text-interactive-text hover:bg-primary-hover squish-press focus-visible:outline-accent relative inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full no-underline shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-auto lg:gap-2 lg:px-4 lg:text-sm lg:font-bold"
             aria-label={cartCountLabel(totalQuantity)}
             aria-controls={CART_DRAWER_ID}
             aria-haspopup="dialog"
@@ -151,9 +151,9 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
               className="relative inline-flex size-5 shrink-0 items-center justify-center"
               aria-hidden="true"
             >
-              <img src="/icons/icon-cart.svg" alt="" className="size-5 lg:brightness-0 lg:invert" />
+              <img src="/icons/icon-cart.svg" alt="" className="size-5 brightness-0 invert" />
               {totalQuantity > 0 ? (
-                <span className="bg-primary text-interactive-text tabular-nums absolute end-0 top-0 flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full px-1 text-[11px] font-bold shadow-sm lg:hidden">
+                <span className="text-primary ring-primary/25 tabular-nums absolute -end-2 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-white px-1 text-[11px] font-extrabold shadow-sm ring-1 lg:hidden">
                   {displayCount(totalQuantity)}
                 </span>
               ) : null}
