@@ -5,7 +5,7 @@ export function AnnouncementBar() {
     <div
       role="region"
       aria-label="Annonce"
-      className="bg-on-surface text-surface px-3 py-2 text-center"
+      className="bg-festive text-surface px-3 py-2 text-center"
     >
       <div className="max-w-page mx-auto flex items-center justify-center">
         <Link
