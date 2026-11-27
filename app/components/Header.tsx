@@ -8,42 +8,12 @@ import type { StorefrontShop } from "~/lib/storefront-shop";
 import { MobileNav, MobileNavTrigger } from "./MobileNav";
 
 export const NAV_COLLECTIONS = [
-  {
-    label: "Mystery Dumplings",
-    to: "/collections/mystery-dumplings",
-    idleClass: "bg-[#E8F4FF] text-[#0E4A8A] border-[#B8DCFF] hover:bg-[#D6ECFF]",
-    activeClass: "bg-[#1E88E5] text-white border-[#1565C0] shadow-xs",
-  },
-  {
-    label: "Format XXL",
-    to: "/collections/squishies-xxl",
-    idleClass: "bg-[#FFECE2] text-[#9A3412] border-[#FFC7AE] hover:bg-[#FFDEC9]",
-    activeClass: "bg-[#EA580C] text-white border-[#C2410C] shadow-xs",
-  },
-  {
-    label: "Crispy & Craquants",
-    to: "/collections/crispy-et-craquants",
-    idleClass: "bg-[#EAFAE0] text-[#255910] border-[#B5E896] hover:bg-[#D9F6C6]",
-    activeClass: "bg-[#3FA322] text-white border-[#2E7D17] shadow-xs",
-  },
-  {
-    label: "Gourmandises & Fruits",
-    to: "/collections/gourmandises-et-fruits",
-    idleClass: "bg-[#FFF4D6] text-[#7A4200] border-[#FFD980] hover:bg-[#FFEBB8]",
-    activeClass: "bg-[#E68A00] text-white border-[#B86E00] shadow-xs",
-  },
-  {
-    label: "Animaux Kawaii",
-    to: "/collections/animaux-kawaii",
-    idleClass: "bg-[#F5EAFF] text-[#5A1E94] border-[#DAC0FF] hover:bg-[#EBD6FF]",
-    activeClass: "bg-[#8B35DB] text-white border-[#6B21A8] shadow-xs",
-  },
-  {
-    label: "Noël & Cadeaux",
-    to: "/collections/noel-et-cadeaux",
-    idleClass: "bg-[#E1F5EB] text-[#145339] border-[#A7DFC3] hover:bg-[#CBEEDB]",
-    activeClass: "bg-festive text-surface border-festive shadow-xs",
-  },
+  { label: "Mystery Dumplings", to: "/collections/mystery-dumplings" },
+  { label: "Format XXL", to: "/collections/squishies-xxl" },
+  { label: "Crispy & Craquants", to: "/collections/crispy-et-craquants" },
+  { label: "Gourmandises & Fruits", to: "/collections/gourmandises-et-fruits" },
+  { label: "Animaux Kawaii", to: "/collections/animaux-kawaii" },
+  { label: "Noël & Cadeaux", to: "/collections/noel-et-cadeaux" },
 ] as const;
 
 function cartCountLabel(count: number) {
@@ -85,35 +55,21 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
   const logo = shopInfo.logo;
 
   return (
-    <header className="border-border bg-surface/95 sticky top-0 z-40 border-b backdrop-blur-md">
-      {/* Ligne 1 : Recherche (gauche) · Logo centré star · Compte & Panier (droite) */}
+    <header className="border-border bg-surface/92 sticky top-0 z-40 border-b backdrop-blur-md lg:border-0 lg:bg-transparent lg:px-margin lg:pt-3 lg:pb-1 lg:backdrop-blur-none">
       <div
-        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:h-[74px]"
+        className="max-w-page px-margin mx-auto grid h-16 w-full grid-cols-[1fr_auto_1fr] items-center gap-2 lg:flex lg:h-[68px] lg:justify-between lg:rounded-full lg:border lg:border-[#F5D0E0] lg:bg-surface/92 lg:px-5 lg:shadow-[0_14px_34px_-18px_rgba(232,74,127,0.34),0_2px_10px_-2px_rgba(35,25,45,0.06)] lg:backdrop-blur-md"
         data-header-nav-group
       >
-        <div className="flex items-center justify-self-start">
-          <div className="-ms-2 lg:hidden" data-hamburger-wrapper>
-            <MobileNavTrigger />
-          </div>
-          <Link
-            to="/search"
-            className="squish-press focus-visible:outline-accent hidden h-10 cursor-pointer items-center gap-2 rounded-full border border-border bg-surface-secondary/75 px-4 text-xs font-medium text-on-surface-secondary no-underline hover:border-primary/40 hover:text-on-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:inline-flex"
-            aria-label="Rechercher un squishy"
-            aria-controls={SEARCH_DRAWER_ID}
-            aria-haspopup="dialog"
-            onClick={(event) => openDialogFromLinkClick(event, SEARCH_DRAWER_ID)}
-          >
-            <img src="/icons/icon-search.svg" alt="" className="size-4" aria-hidden="true" />
-            <span>Rechercher un squishy…</span>
-          </Link>
+        <div className="-ms-2 flex items-center justify-self-start lg:hidden" data-hamburger-wrapper>
+          <MobileNavTrigger />
         </div>
 
-        <div className="flex min-w-0 items-center justify-self-center">
+        <div className="flex min-w-0 items-center justify-self-center lg:shrink-0 lg:justify-self-start">
           <Link
             to="/"
             aria-label={shopInfo.name}
             title={shopInfo.name}
-            className="text-on-surface focus-visible:outline-accent inline-flex max-w-36 min-w-0 items-center justify-center rounded-xl py-1 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:max-w-52"
+            className="text-on-surface focus-visible:outline-accent inline-flex max-w-36 min-w-0 items-center justify-center rounded-xl py-1 no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:max-w-48"
           >
             {logo && failedLogoUrl !== logo.url ? (
               <img
@@ -121,22 +77,52 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
                 alt={logo.altText ?? shopInfo.name}
                 width={logo.width ?? undefined}
                 height={logo.height ?? undefined}
-                className="h-auto max-h-11 w-auto max-w-full object-contain lg:max-h-14"
+                className="h-auto max-h-11 w-auto max-w-full object-contain"
                 ref={(img) => {
                   if (img?.complete && img.naturalWidth === 0) setFailedLogoUrl(logo.url);
                 }}
                 onError={() => setFailedLogoUrl(logo.url)}
               />
             ) : (
-              <SquishiesWordmark name={shopInfo.name} className="h-10 w-auto sm:h-11 lg:h-14" />
+              <SquishiesWordmark name={shopInfo.name} />
             )}
           </Link>
         </div>
 
+        <nav
+          aria-label="Navigation principale"
+          className="mx-3 hidden flex-1 items-center justify-center gap-1 lg:flex xl:gap-1.5"
+          data-desktop-nav
+        >
+          {NAV_COLLECTIONS.map((item) => {
+            const isActive = pathname === item.to;
+            const isFestive = item.to.includes("noel");
+
+            const itemClass = isFestive
+              ? isActive
+                ? "bg-festive text-surface border border-festive shadow-xs"
+                : "bg-festive/10 text-festive border border-festive/25 hover:bg-festive hover:text-surface"
+              : isActive
+                ? "bg-pastel-rose text-primary shadow-2xs"
+                : "text-on-surface hover:bg-pastel-rose/70 hover:text-primary";
+
+            return (
+              <Link
+                key={item.to}
+                to={item.to}
+                aria-current={isActive ? "page" : undefined}
+                className={`font-heading squish-press focus-visible:outline-accent shrink-0 rounded-full px-3 py-1.5 text-[13px] font-semibold whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 xl:px-3.5 xl:text-sm ${itemClass}`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
+
         <div className="flex shrink-0 items-center justify-self-end gap-1">
           <Link
             to="/search"
-            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-surface-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:hidden"
+            className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full font-medium hover:bg-pastel-rose/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:h-10 lg:w-10"
             aria-label="Rechercher"
             aria-controls={SEARCH_DRAWER_ID}
             aria-haspopup="dialog"
@@ -184,43 +170,6 @@ export function Header({ shopInfo }: { shopInfo: StorefrontShop }) {
           </span>
         </div>
       </div>
-
-      {/* Ligne 2 desktop : fines pilules pastel centrées */}
-      <nav
-        aria-label="Navigation principale"
-        className="hidden border-t border-[#F4DFEA] bg-surface-secondary/45 py-2.5 lg:block"
-        data-desktop-nav
-      >
-        <div className="max-w-page px-margin mx-auto flex flex-wrap items-center justify-center gap-2">
-          <Link
-            to="/"
-            aria-current={pathname === "/" ? "page" : undefined}
-            className={`font-heading squish-press focus-visible:outline-accent rounded-full border px-3.5 py-1 text-xs font-semibold whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 xl:text-[13px] ${
-              pathname === "/"
-                ? "border-[#D93275] bg-[#FF4D94] text-white shadow-xs"
-                : "border-[#FFBAD5] bg-[#FFEBF3] text-[#A81652] hover:bg-[#FFD9E8]"
-            }`}
-          >
-            Accueil
-          </Link>
-          {NAV_COLLECTIONS.map((item) => {
-            const isActive = pathname === item.to;
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                aria-current={isActive ? "page" : undefined}
-                className={`font-heading squish-press focus-visible:outline-accent rounded-full border px-3.5 py-1 text-xs font-semibold whitespace-nowrap no-underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 xl:text-[13px] ${
-                  isActive ? item.activeClass : item.idleClass
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </div>
-      </nav>
-
       <MobileNav shopName={shopInfo.name} />
     </header>
   );
