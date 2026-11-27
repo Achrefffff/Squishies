@@ -78,6 +78,203 @@ type CartLineView = {
   } | null;
 };
 
+export function CartSquishyBackdrop() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 overflow-hidden bg-gradient-to-b from-[#FFFDF9] via-[#FFF6FA] to-[#FFE7F2]"
+    >
+      {/* Soft pastel watercolor glows */}
+      <span className="absolute -top-12 -left-10 size-44 rounded-full bg-[#FFE0EE]/55 blur-2xl" />
+      <span className="absolute top-1/3 -right-12 size-44 rounded-full bg-[#DFF5EA]/55 blur-2xl" />
+      <span className="absolute bottom-16 -left-10 size-40 rounded-full bg-[#EDE0FF]/55 blur-2xl" />
+
+      {/* Cute glossy kawaii Squishy Mochi-Cat peeking from the bottom */}
+      <svg
+        viewBox="0 0 360 260"
+        fill="none"
+        className="absolute inset-x-0 bottom-0 h-auto w-full opacity-90"
+        preserveAspectRatio="xMidYMax slice"
+      >
+        <defs>
+          <radialGradient id="sqBody" cx="38%" cy="28%" r="70%">
+            <stop offset="0%" stopColor="#FFF7FB" />
+            <stop offset="55%" stopColor="#FFD3E6" />
+            <stop offset="100%" stopColor="#FFADC9" />
+          </radialGradient>
+          <radialGradient id="sqCloud" cx="50%" cy="25%" r="75%">
+            <stop offset="0%" stopColor="#FFFFFF" />
+            <stop offset="100%" stopColor="#FFEBF4" />
+          </radialGradient>
+          <radialGradient id="sqHeart" cx="35%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#FF88B4" />
+            <stop offset="100%" stopColor="#E84A7F" />
+          </radialGradient>
+          <radialGradient id="sqBlush" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#FF7AA8" stopOpacity="0.65" />
+            <stop offset="100%" stopColor="#FF7AA8" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+
+        {/* Floating pastel sparkles & sprinkles */}
+        <path
+          d="M52 72 L55 81 L64 84 L55 87 L52 96 L49 87 L40 84 L49 81 Z"
+          fill="#FF9DC5"
+          opacity="0.75"
+        />
+        <path
+          d="M306 58 L309 67 L318 70 L309 73 L306 82 L303 73 L294 70 L303 67 Z"
+          fill="#FFD166"
+          opacity="0.85"
+        />
+        <path
+          d="M276 112 L278 117 L283 119 L278 121 L276 126 L274 121 L269 119 L274 117 Z"
+          fill="#96CCFF"
+          opacity="0.8"
+        />
+        <circle cx="88" cy="120" r="4.5" fill="#B5E896" opacity="0.75" />
+        <circle cx="322" cy="128" r="4" fill="#D5B8FF" opacity="0.8" />
+        <rect
+          x="104"
+          y="64"
+          width="11"
+          height="4.5"
+          rx="2.25"
+          transform="rotate(-24 104 64)"
+          fill="#96CCFF"
+          opacity="0.75"
+        />
+        <rect
+          x="244"
+          y="50"
+          width="11"
+          height="4.5"
+          rx="2.25"
+          transform="rotate(22 244 50)"
+          fill="#FF9DC5"
+          opacity="0.75"
+        />
+
+        {/* Back pastel cloud puffs */}
+        <ellipse cx="64" cy="236" rx="76" ry="44" fill="#FFF2F8" />
+        <ellipse cx="304" cy="238" rx="82" ry="46" fill="#EDF9F2" />
+
+        {/* Cute chubby Squishy Mochi-Cat */}
+        <g transform="translate(180 176)">
+          {/* Soft drop shadow on cloud */}
+          <ellipse cx="0" cy="54" rx="74" ry="14" fill="#E84A7F" opacity="0.12" />
+
+          {/* Left ear */}
+          <path
+            d="M-56 -32 C-66 -70 -38 -82 -18 -54 Z"
+            fill="url(#sqBody)"
+            stroke="#F497BC"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+          <path d="M-49 -38 C-55 -60 -39 -66 -26 -50 Z" fill="#FF9BC2" opacity="0.7" />
+
+          {/* Right ear */}
+          <path
+            d="M56 -32 C66 -70 38 -82 18 -54 Z"
+            fill="url(#sqBody)"
+            stroke="#F497BC"
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+          <path d="M49 -38 C55 -60 39 -66 26 -50 Z" fill="#FF9BC2" opacity="0.7" />
+
+          {/* Plump mochi squishy body */}
+          <path
+            d="M-76 12 C-78 -34 -46 -60 0 -60 C46 -60 78 -34 76 12 C74 44 46 56 0 56 C-46 56 -74 44 -76 12 Z"
+            fill="url(#sqBody)"
+            stroke="#F497BC"
+            strokeWidth="2.5"
+          />
+
+          {/* Glossy jelly specular highlights */}
+          <ellipse
+            cx="-28"
+            cy="-36"
+            rx="22"
+            ry="10"
+            transform="rotate(-16 -28 -36)"
+            fill="#FFFFFF"
+            opacity="0.72"
+          />
+          <circle cx="-50" cy="-22" r="4.5" fill="#FFFFFF" opacity="0.75" />
+
+          {/* Rosy cheeks */}
+          <ellipse cx="-38" cy="4" rx="15" ry="10" fill="url(#sqBlush)" />
+          <ellipse cx="38" cy="4" rx="15" ry="10" fill="url(#sqBlush)" />
+
+          {/* Big sparkling kawaii eyes */}
+          <circle cx="-26" cy="-8" r="9.5" fill="#2A1D36" />
+          <circle cx="-29" cy="-11.5" r="3.4" fill="#FFFFFF" />
+          <circle cx="-22.5" cy="-5" r="1.7" fill="#FFFFFF" />
+
+          <circle cx="26" cy="-8" r="9.5" fill="#2A1D36" />
+          <circle cx="23" cy="-11.5" r="3.4" fill="#FFFFFF" />
+          <circle cx="29.5" cy="-5" r="1.7" fill="#FFFFFF" />
+
+          {/* Tiny happy cat smile */}
+          <path
+            d="M-9 2 Q-4.5 8 0 3 Q4.5 8 9 2"
+            stroke="#2A1D36"
+            strokeWidth="2.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+
+          {/* Tiny glossy raspberry heart held between chubby paws */}
+          <path
+            d="M0 37 C0 37 -14 27.5 -14 19.5 C-14 15.2 -10.6 12 -6.5 12 C-3.6 12 -1.2 13.5 0 15.6 C1.2 13.5 3.6 12 6.5 12 C10.6 12 14 15.2 14 19.5 C14 27.5 0 37 0 37 Z"
+            fill="url(#sqHeart)"
+          />
+          <ellipse
+            cx="-5"
+            cy="17.5"
+            rx="3.2"
+            ry="1.8"
+            transform="rotate(-25 -5 17.5)"
+            fill="#FFFFFF"
+            opacity="0.65"
+          />
+
+          {/* Chubby little squishy paws */}
+          <ellipse
+            cx="-22"
+            cy="28"
+            rx="13"
+            ry="9.5"
+            transform="rotate(18 -22 28)"
+            fill="#FFE6F1"
+            stroke="#F497BC"
+            strokeWidth="2.2"
+          />
+          <ellipse
+            cx="22"
+            cy="28"
+            rx="13"
+            ry="9.5"
+            transform="rotate(-18 22 28)"
+            fill="#FFE6F1"
+            stroke="#F497BC"
+            strokeWidth="2.2"
+          />
+        </g>
+
+        {/* Foreground fluffy pastel clouds framing the bottom edge */}
+        <path
+          d="M-10 260 L-10 226 Q26 206 66 222 Q108 202 156 226 Q204 206 250 224 Q298 204 370 228 L370 260 Z"
+          fill="url(#sqCloud)"
+        />
+      </svg>
+    </div>
+  );
+}
+
 export function CartLineItem({
   line,
   emptyCartFocusId,
@@ -118,7 +315,7 @@ export function CartLineItem({
 
   return (
     <li
-      className={`flex gap-3.5 py-4 transition-opacity ${pending ? "opacity-60" : ""}`}
+      className={`bg-surface-elevated/90 border-border/80 flex gap-3.5 rounded-2xl border p-3 shadow-2xs backdrop-blur-[2px] transition-opacity ${pending ? "opacity-60" : ""}`}
       data-testid="cart-line"
       {...(pending ? { "aria-busy": "true" } : {})}
     >
@@ -221,29 +418,31 @@ function CartLines() {
 
   if (lines.length === 0) {
     return (
-      <div className="flex h-full flex-col items-center justify-center px-4 text-center">
-        <div className="bg-pastel-rose mb-4 flex size-16 items-center justify-center rounded-full">
-          <img src="/icons/icon-cart.svg" alt="" className="size-7 opacity-80" aria-hidden="true" />
+      <div className="flex h-full flex-col items-center justify-start px-4 pt-12 text-center">
+        <div className="bg-surface-elevated/90 border-border/80 rounded-3xl border px-6 py-7 shadow-sm backdrop-blur-xs">
+          <div className="bg-pastel-rose mx-auto mb-4 flex size-14 items-center justify-center rounded-full">
+            <img src="/icons/icon-cart.svg" alt="" className="size-6 opacity-80" aria-hidden="true" />
+          </div>
+          <p className="font-heading text-on-surface text-lg font-semibold">
+            Votre panier est vide
+          </p>
+          <p className="text-on-surface-secondary mt-1.5 max-w-xs text-sm">
+            Explorez nos squishies craquants, pailletés et coffrets cadeaux pour commencer.
+          </p>
+          <Link
+            to="/collections"
+            onClick={() => closeCartDrawer()}
+            className="rounded-button button-primary squish-press mt-5 inline-flex h-11 items-center justify-center px-6 text-sm font-semibold no-underline"
+          >
+            Découvrir les squishies
+          </Link>
         </div>
-        <p className="font-heading text-on-surface text-lg font-semibold">
-          Votre panier est vide
-        </p>
-        <p className="text-on-surface-secondary mt-1.5 max-w-xs text-sm">
-          Explorez nos squishies craquants, pailletés et coffrets cadeaux pour commencer.
-        </p>
-        <Link
-          to="/collections"
-          onClick={() => closeCartDrawer()}
-          className="rounded-button button-primary squish-press mt-6 inline-flex h-11 items-center justify-center px-6 text-sm font-semibold no-underline"
-        >
-          Découvrir les squishies
-        </Link>
       </div>
     );
   }
 
   return (
-    <ul role="list" className="divide-border -mt-4 divide-y">
+    <ul role="list" className="flex flex-col gap-3 pb-36">
       {lines.map((line) => (
         <CartLineItem key={line.id} line={line} emptyCartFocusId="cart-drawer-title" />
       ))}
@@ -327,8 +526,8 @@ export function CartDrawer() {
         data-testid="cart-drawer"
         closedby="any"
       >
-        <div className="flex h-full flex-col">
-          <div className="border-border flex h-14 shrink-0 items-center border-b ps-4 pe-2">
+        <div className="flex h-full flex-col overflow-hidden">
+          <div className="border-border bg-surface/95 flex h-14 shrink-0 items-center border-b ps-4 pe-2">
             <div className="flex flex-1 items-center gap-2">
               <h2
                 id="cart-drawer-title"
@@ -345,7 +544,7 @@ export function CartDrawer() {
               type="button"
               commandfor={CART_DRAWER_ID}
               command="close"
-              className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full hover:bg-surface-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="button-icon squish-press focus-visible:outline-accent inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-pastel-rose/55 hover:bg-pastel-rose focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               aria-label="Fermer le panier"
               onClick={() => closeCartDrawer()}
             >
@@ -353,8 +552,11 @@ export function CartDrawer() {
             </button>
           </div>
           <CartErrorBanner />
-          <div className="flex-1 overflow-y-auto p-4">
-            <CartLines />
+          <div className="relative flex-1 overflow-hidden">
+            <CartSquishyBackdrop />
+            <div className="relative z-10 h-full overflow-y-auto p-4">
+              <CartLines />
+            </div>
           </div>
           <CartFooter />
         </div>

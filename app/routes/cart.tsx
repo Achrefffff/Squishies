@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Link } from "react-router";
 
 import { publishCartViewed } from "~/components/AnalyticsTrackers";
-import { CartLineItem } from "~/components/CartDrawer";
+import { CartLineItem, CartSquishyBackdrop } from "~/components/CartDrawer";
 import { useCart } from "~/lib/cart";
 import { formatPrice } from "~/lib/money";
 import { formatPageTitle, getShopNameFromRootMatch } from "~/lib/storefront-shop";
@@ -34,24 +34,27 @@ export default function CartRoute() {
       </h1>
       {loading ? <p className="text-on-surface-secondary">Chargement du panier…</p> : null}
       {!loading && lines.length === 0 ? (
-        <div className="bg-surface-elevated border-border rounded-3xl border p-8 text-center">
-          <p className="font-heading text-on-surface text-lg font-semibold">
-            Votre panier est vide.
-          </p>
-          <p className="text-on-surface-secondary mt-2 text-sm">
-            Vous n&apos;avez pas encore ajouté de squishy à votre panier.
-          </p>
-          <Link
-            to="/collections"
-            className="rounded-button button-primary squish-press mt-6 inline-flex h-12 items-center justify-center px-6 text-sm font-semibold no-underline"
-          >
-            Découvrir les squishies
-          </Link>
+        <div className="border-border relative overflow-hidden rounded-3xl border px-6 pt-10 pb-48 text-center shadow-sm sm:pb-56">
+          <CartSquishyBackdrop />
+          <div className="bg-surface-elevated/90 border-border/80 relative z-10 mx-auto max-w-md rounded-3xl border p-6 shadow-xs backdrop-blur-xs">
+            <p className="font-heading text-on-surface text-lg font-semibold">
+              Votre panier est vide.
+            </p>
+            <p className="text-on-surface-secondary mt-2 text-sm">
+              Vous n&apos;avez pas encore ajouté de squishy à votre panier.
+            </p>
+            <Link
+              to="/collections"
+              className="rounded-button button-primary squish-press mt-6 inline-flex h-12 items-center justify-center px-6 text-sm font-semibold no-underline"
+            >
+              Découvrir les squishies
+            </Link>
+          </div>
         </div>
       ) : null}
       {lines.length > 0 ? (
         <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
-          <ul role="list" className="divide-border divide-y">
+          <ul role="list" className="flex flex-col gap-3">
             {lines.map((line) => (
               <CartLineItem key={line.id} line={line} emptyCartFocusId="cart-page-title" />
             ))}
